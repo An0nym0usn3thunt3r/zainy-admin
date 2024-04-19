@@ -1,49 +1,52 @@
-import React from "react";
-// import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
-import {  Modal,   ModalContent,   ModalHeader,   ModalBody,   ModalFooter, useDisclosure} from "@nextui-org/react";
-import { Button } from "@/components/ui/button";
-export default function App() {
-  const {isOpen, onOpen, onOpenChange} = useDisclosure();
+'use client'
+
+import axios from 'axios';
+import { useState } from 'react';
+
+const MyComponent = () => {
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState(null);
+
+  const options = {
+    method: 'POST',
+    url: 'https://api-v2.ziina.com/api/payment_intent',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+      authorization: 'Bearer 12vtblGQd7EL+8r/Sgh5rWC34fPGYDNfAP5E/kNQr2dfcbGR1XvW3waZ2bd2giyh'
+    },
+    data: {
+      amount: 1000,
+      currency_code: 'AED',
+      message: 'string',
+      success_url: 'https://www.whatsapp.com',
+      cancel_url: 'https://www.nexadevs.pro',
+      test: true
+    }
+  };
+
+  const handleSubmit = async (event: any) => {
+    event.preventDefault();
+
+    try {
+      const res = await axios.request(options);
+      setResponse(res.data);
+    } catch (err:any) {
+      setError(err);
+      console.log(err)
+    }
+  };
 
   return (
-    <>
-      <Button onClick={onOpen}>Open Modal</Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">Modal Title</ModalHeader>
-              <ModalBody>
-                <p> 
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  Nullam pulvinar risus non risus hendrerit venenatis.
-                  Pellentesque sit amet hendrerit risus, sed porttitor quam.
-                </p>
-                <p>
-                  Magna exercitation reprehenderit magna aute tempor cupidatat consequat elit
-                  dolor adipisicing. Mollit dolor eiusmod sunt ex incididunt cillum quis. 
-                  Velit duis sit officia eiusmod Lorem aliqua enim laboris do dolor eiusmod. 
-                  Et mollit incididunt nisi consectetur esse laborum eiusmod pariatur 
-                  proident Lorem eiusmod et. Culpa deserunt nostrud ad veniam.
-                </p>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="danger" variant="default" onClick={onClose}>
-                  Close
-                </Button>
-                <Button color="primary" onClick={onClose}>
-                  Action
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
-    </>
+    <div>
+      <form onSubmit={handleSubmit}>
+        {/* Your form elements here */}
+        <button type="submit">Submit</button>
+      </form>
+      {response && <p>{JSON.stringify(response, null, 2)}</p>}
+      {error && <p>Error:</p>}
+    </div>
   );
-}
+};
+
+export default MyComponent;
