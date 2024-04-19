@@ -293,6 +293,71 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
           <Divider className="my-4" />
 
+          <div>
+            <FormField
+              control={form.control}
+              name="colors"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Colors</FormLabel>
+                  <FormControl>
+                    <MultiText
+                      placeholder="Colors"
+                      value={field.value}
+                      onChange={(color) =>
+                        field.onChange([...field.value, color])
+                      }
+                      onRemove={(colorToRemove) =>
+                        field.onChange([
+                          ...field.value.filter(
+                            (color) => color !== colorToRemove
+                          ),
+                        ])
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-1" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="expense"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Expense ($)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Expense"
+                      {...field}
+                      onKeyDown={handleKeyPress}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-1" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price ($)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Price"
+                      {...field}
+                      onKeyDown={handleKeyPress}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-1" />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <div className="flex gap-10">
             <Button type="submit" className="bg-blue-1 text-white">
               Submit
