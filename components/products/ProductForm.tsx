@@ -393,7 +393,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                   control={form.control}
                   name="colors"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="w-1/3">
                       <FormLabel>Color</FormLabel>
                       <FormControl>
                         <Input
@@ -411,7 +411,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                   control={form.control}
                   name="ColorValue"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="w-1/3">
                       <FormLabel>Value</FormLabel>
                       <FormControl>
                         <Input
