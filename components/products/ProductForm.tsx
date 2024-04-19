@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import ImageUpload from "../custom ui/ImageUpload";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import Delete from "../custom ui/Delete";
 import MultiText from "../custom ui/MultiText";
@@ -35,7 +35,6 @@ const formSchema = z.object({
   tags: z.array(z.string()),
   sizes: z.array(z.string()),
   colors: z.array(z.string()),
-  ColorValue: z.array(z.string()),
   price: z.coerce.number().min(0.1),
   expense: z.coerce.number().min(0.1),
 });
@@ -121,33 +120,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       console.log("[products_POST]", err);
       toast.error("Something went wrong! Please try again.");
     }
-  };
-
-  interface ColorElement {
-    key: string;
-    value: string;
-  }
-  const [colorElements, setColorElements] = useState<ColorElement[]>([
-    { key: "", value: "" },
-  ]);
-  const handleChange = (
-    index: number,
-    e: Event
-  ) => {
-    const { name, value } = e.target;
-    const newFields = [...colorElements];
-    newFields[index][name as keyof ColorElement] = value;
-    setColorElements(newFields);
-  };
-
-  const addField = () => {
-    setColorElements([...colorElements, { key: "", value: "" }]);
-  };
-
-  const handleSubmit = (e: Event) => {
-    e.preventDefault();
-    // Handle form submission here
-    console.log(colorElements);
   };
 
   return loading ? (
@@ -291,146 +263,100 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             )}
+            <FormField
+              control={form.control}
+              name="sizes"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Sizes</FormLabel>
+                  <FormControl>
+                    <MultiText
+                      placeholder="Sizes"
+                      value={field.value}
+                      onChange={(size) =>
+                        field.onChange([...field.value, size])
+                      }
+                      onRemove={(sizeToRemove) =>
+                        field.onChange([
+                          ...field.value.filter(
+                            (size) => size !== sizeToRemove
+                          ),
+                        ])
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-1" />
+                </FormItem>
+              )}
+            />
           </div>
 
           <Divider className="my-4" />
 
           <div>
-            {/* <div className="md:grid md:grid-cols-4 gap-8">
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Price ($)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Price"
-                        {...field}
-                        onKeyDown={handleKeyPress}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-1" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="expense"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Expense ($)</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Expense"
-                        {...field}
-                        onKeyDown={handleKeyPress}
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-1" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="colors"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Colors</FormLabel>
-                    <FormControl>
-                      <MultiText
-                        placeholder="Colors"
-                        value={field.value}
-                        onChange={(color) =>
-                          field.onChange([...field.value, color])
-                        }
-                        onRemove={(colorToRemove) =>
-                          field.onChange([
-                            ...field.value.filter(
-                              (color) => color !== colorToRemove
-                            ),
-                          ])
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-1" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="sizes"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Sizes</FormLabel>
-                    <FormControl>
-                      <MultiText
-                        placeholder="Sizes"
-                        value={field.value}
-                        onChange={(size) =>
-                          field.onChange([...field.value, size])
-                        }
-                        onRemove={(sizeToRemove) =>
-                          field.onChange([
-                            ...field.value.filter(
-                              (size) => size !== sizeToRemove
-                            ),
-                          ])
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-1" />
-                  </FormItem>
-                )}
-              />
-            </div> */}
-
-            {colorElements.map((colorElement, index) => (
-              <div key={index}>
-                <FormField
-                  control={form.control}
-                  name="colors"
-                  render={({ field }) => (
-                    <FormItem className="w-1/3">
-                      <FormLabel>Color</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Title"
-                          {...field}
-                          value={colorElement.key}
-                          onKeyDown={(e) => handleChange(index, e)}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-red-1" />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="ColorValue"
-                  render={({ field }) => (
-                    <FormItem className="w-1/3">
-                      <FormLabel>Value</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Title"
-                          {...field}
-                          value={colorElement.value}
-                          onKeyDown={(e) => handleChange(index, e)}
-                        />
-                      </FormControl>
-                      <FormMessage className="text-red-1" />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            ))}
+            <FormField
+              control={form.control}
+              name="colors"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Colors</FormLabel>
+                  <FormControl>
+                    <MultiText
+                      placeholder="Colors"
+                      value={field.value}
+                      onChange={(color) =>
+                        field.onChange([...field.value, color])
+                      }
+                      onRemove={(colorToRemove) =>
+                        field.onChange([
+                          ...field.value.filter(
+                            (color) => color !== colorToRemove
+                          ),
+                        ])
+                      }
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-1" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="expense"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Expense ($)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Expense"
+                      {...field}
+                      onKeyDown={handleKeyPress}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-1" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price ($)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Price"
+                      {...field}
+                      onKeyDown={handleKeyPress}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-1" />
+                </FormItem>
+              )}
+            />
           </div>
-          <Button type="button" variant={"outline"} onClick={addField}>
-            Add more
-          </Button>
 
           <div className="flex gap-10">
             <Button type="submit" className="bg-blue-1 text-white">
