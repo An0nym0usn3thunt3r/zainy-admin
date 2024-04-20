@@ -38,4 +38,14 @@ export const navLinks = [
     icon: <UsersRound />,
     label: "Customers",
   },
+  {
+    url: "/SpecialOffers",
+    icon: <UsersRound />,
+    label: "Special Offers",
+  },
+  {
+    url: "/LimitedOffers",
+    icon: <UsersRound />,
+    label: "Limited Offers",
+  },
 ];

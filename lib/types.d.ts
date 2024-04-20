@@ -50,3 +50,27 @@ type CustomerType = {
   name: string;
   email: string;
 }
+
+type LimitedOffersType = {
+  _id: string;
+  image: string;
+  link: string;
+};
+
+type LimitedOffersCollectionType = {
+  _id: string;
+  link: string;
+  image: string;
+}
+
+type SpecialOffersType = {
+  _id: string;
+  image: string;
+  link: string;
+};
+
+type SpecialOffersCollectionType = {
+  _id: string;
+  link: string;
+  image: string;
+}

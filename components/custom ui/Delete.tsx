@@ -1,8 +1,5 @@
-"use client"
-
 import { useState } from "react";
 import { Trash } from "lucide-react";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,25 +21,42 @@ interface DeleteProps {
 
 const Delete: React.FC<DeleteProps> = ({ item, id }) => {
   const [loading, setLoading] = useState(false);
+  console.log(`request to delete : ${item}`)
 
   const onDelete = async () => {
     try {
-      setLoading(true)
-      const itemType = item === "product" ? "products" : "collections"
+      setLoading(true);
+      let itemType;
+      switch (item) {
+        case "product":
+          itemType = "products";
+          break;
+        case "collections":
+          itemType = "collections";
+          break;
+        case "limitedoffer":
+          itemType = "limited_offers";
+          break;
+        case "specialoffer":
+          itemType = "special_offers";
+          break;
+        default:
+          throw new Error("Unsupported item type");
+      }
       const res = await fetch(`/api/${itemType}/${id}`, {
         method: "DELETE",
-      })
+      });
 
       if (res.ok) {
-        setLoading(false)
-        window.location.href = (`/${itemType}`)
-        toast.success(`${item} deleted`)
+        setLoading(false);
+        window.location.href = `/${itemType}`;
+        toast.success(`${item} deleted`);
       }
     } catch (err) {
-      console.log(err)
-      toast.error("Something went wrong! Please try again.")
+      console.log(err);
+      toast.error("Something went wrong! Please try again.");
     }
-  }
+  };
   return (
     <AlertDialog>
       <AlertDialogTrigger>
@@ -59,7 +73,9 @@ const Delete: React.FC<DeleteProps> = ({ item, id }) => {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction className="bg-red-1 text-white" onClick={onDelete}>Delete</AlertDialogAction>
+          <AlertDialogAction className="bg-red-1 text-white" onClick={onDelete}>
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
