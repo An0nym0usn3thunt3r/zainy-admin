@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useState, useCallback } from "react"
 import Loader from "@/components/custom ui/Loader"
 import CollectionForm from "@/components/collections/CollectionForm"
