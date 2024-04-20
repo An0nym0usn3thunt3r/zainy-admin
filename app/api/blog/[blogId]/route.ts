@@ -54,7 +54,7 @@ export const POST = async (
 
     collection = await Blog.findByIdAndUpdate(
       params.blogId,
-      { title, description, image },
+      { title, description1,description2, description3, image },
       { new: true }
     );
 
@@ -69,7 +69,7 @@ export const POST = async (
 
 export const DELETE = async (
   req: NextRequest,
-  { params }: { params: { collectionId: string } }
+  { params }: { params: { blogId: string } }
 ) => {
   try {
     const { userId } = auth();
