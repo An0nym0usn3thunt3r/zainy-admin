@@ -14,7 +14,7 @@ export const POST = async (req: NextRequest) => {
 
     await connectToDB()
 
-    const { title, description, image } = await req.json()
+    const { title, description1, description2, description3 , image } = await req.json()
 
     const existingBlog = await Blog.findOne({ title })
 
@@ -28,7 +28,9 @@ export const POST = async (req: NextRequest) => {
 
     const newCollection = await Blog.create({
       title,
-      description,
+      description1,
+      description2,
+      description3,
       image,
     })
 
