@@ -23,8 +23,9 @@ const CollectionDetails = ({ params }: { params: { collectionId: string }}) => {
   }
 
   useEffect(() => {
-    getCollectionDetails()
-  }, [])
+    getCollectionDetails();
+  }, [getCollectionDetails]);
+  
 
   return loading ? <Loader /> : (
     <CollectionForm initialData={collectionDetails}/>

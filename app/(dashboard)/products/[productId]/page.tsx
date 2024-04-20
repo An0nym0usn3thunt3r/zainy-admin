@@ -22,8 +22,11 @@ const ProductDetails = ({ params }: { params: { productId: string }}) => {
   }
 
   useEffect(() => {
-    getProductDetails()
-  }, [])
+    const fetchData = async () => {
+      await getProductDetails()
+    }
+    fetchData()
+  }, [getProductDetails])
 
   return loading ? <Loader /> : (
     <ProductForm initialData={productDetails} />

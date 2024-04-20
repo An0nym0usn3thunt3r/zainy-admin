@@ -1,8 +1,9 @@
-import LimitedOffersForm from "@/components/LimitedOffers/LimitedOffersForm"
+// import LimitedOffersForm from "@/components/LimitedOffers/LimitedOffersForm"
 
 const CreateProduct = () => {
   return (
-    <LimitedOffersForm />
+    // <LimitedOffersForm />
+    <div>LimitedOffersForm</div>
   )
 }
 
