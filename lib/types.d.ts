@@ -5,6 +5,14 @@ type CollectionType = {
   image: string;
   products: ProductType[];
 }
+type BlogType = {
+  _id: string;
+  title: string;
+  description1: string;
+  description2: string;
+  description3: string;
+  image: string;
+}
 
 type ProductType = {
   _id: string;

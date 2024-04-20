@@ -1,5 +1,6 @@
 import {
   LayoutDashboard,
+  Notebook,
   Shapes,
   ShoppingBag,
   Tag,
@@ -26,6 +27,11 @@ export const navLinks = [
     url: "/orders",
     icon: <ShoppingBag />,
     label: "Orders",
+  },
+  {
+    url: "/blogs",
+    icon: <Notebook />,
+    label: "Blogs",
   },
   {
     url: "/customers",
