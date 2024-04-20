@@ -3,10 +3,7 @@
 import axios from 'axios';
 import { useState } from 'react';
 
-const MyComponent = () => {
-  const [response, setResponse] = useState(null);
-  const [error, setError] = useState(null);
-
+const MyComponent = async () => {
   const options = {
     method: 'POST',
     url: 'https://api-v2.ziina.com/api/payment_intent',
@@ -25,28 +22,14 @@ const MyComponent = () => {
     }
   };
 
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
-
     try {
       const res = await axios.request(options);
-      setResponse(res.data);
+      console.log(res)
+      return res
     } catch (err:any) {
-      setError(err);
       console.log(err)
+      return err;
     }
-  };
-
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        {/* Your form elements here */}
-        <button type="submit">Submit</button>
-      </form>
-      {response && <p>{JSON.stringify(response, null, 2)}</p>}
-      {error && <p>Error:</p>}
-    </div>
-  );
 };
 
 export default MyComponent;
