@@ -55,6 +55,7 @@ const Delete: React.FC<DeleteProps> = ({ item, id }) => {
     } catch (err) {
       console.log(err);
       toast.error("Something went wrong! Please try again.");
+      // toast.error("Something went wrong! Please try again.");
     }
   };
   return (
