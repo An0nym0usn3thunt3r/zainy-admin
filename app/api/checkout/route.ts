@@ -15,12 +15,13 @@ const reqPayment = async (amount: number) => {
 };
 
 export async function POST(req: NextRequest) {
+  console.log("someone request payment")
   const requestBody = await req.json();
-
+  
   if (!requestBody || !requestBody.amount) {
     return new NextResponse("Not enough data to checkout", { status: 400 });
   }
-
+  
   const amount = requestBody.amount;
 
   console.log("Request comes with : " + amount);
@@ -33,6 +34,7 @@ export async function POST(req: NextRequest) {
     // }
 
     const payment = await reqPayment(amount);
+    console.log(payment)
     return NextResponse.json(payment);
   } catch (err) {
     console.log("[checkout_POST]", err);
