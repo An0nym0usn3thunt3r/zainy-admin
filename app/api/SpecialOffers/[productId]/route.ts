@@ -1,5 +1,5 @@
 import Collection from "@/lib/models/Collection";
-import LimitedOffers from "@/lib/models/LimitedOffers";
+import SpecialOffers from "@/lib/models/SpecialOffers";
 import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs";
 
@@ -12,7 +12,7 @@ export const GET = async (
   try {
     await connectToDB();
 
-    const product = await LimitedOffers.findById(params.productId).populate({
+    const product = await SpecialOffers.findById(params.productId).populate({
       path: "collections",
       model: Collection,
     });
@@ -50,7 +50,7 @@ export const POST = async (
 
     await connectToDB();
 
-    const product = await LimitedOffers.findById(params.productId);
+    const product = await SpecialOffers.findById(params.productId);
 
     if (!product) {
       return new NextResponse(
@@ -106,7 +106,7 @@ export const POST = async (
     ]);
 
     // Update product
-    const updatedProduct = await LimitedOffers.findByIdAndUpdate(
+    const updatedProduct = await SpecialOffers.findByIdAndUpdate(
       product._id,
       {
         title,
@@ -145,7 +145,7 @@ export const DELETE = async (
 
     await connectToDB();
 
-    const product = await LimitedOffers.findById(params.productId);
+    const product = await SpecialOffers.findById(params.productId);
 
     if (!product) {
       return new NextResponse(
@@ -154,16 +154,18 @@ export const DELETE = async (
       );
     }
 
-    await LimitedOffers.findByIdAndDelete(product._id);
+    await SpecialOffers.findByIdAndDelete(product._id);
+
+    console.log("product collection : ", product.collection);
 
     // Update collections
-    await Promise.all(
-      product.collections.map((collectionId: string) =>
-        Collection.findByIdAndUpdate(collectionId, {
-          $pull: { products: product._id },
-        })
-      )
-    );
+    // await Promise.all(
+    //   product.collections?.map((collectionId: string) =>
+    //     SpecialOffers.findByIdAndUpdate(collectionId, {
+    //       $pull: { products: product._id },
+    //     })
+    //   )
+    // );
 
     return new NextResponse(JSON.stringify({ message: "Product deleted" }), {
       status: 200,

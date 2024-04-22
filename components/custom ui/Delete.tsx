@@ -35,10 +35,10 @@ const Delete: React.FC<DeleteProps> = ({ item, id }) => {
           itemType = "collections";
           break;
         case "limitedoffer":
-          itemType = "limited_offers";
+          itemType = "LimitedOffers";
           break;
         case "specialoffer":
-          itemType = "special_offers";
+          itemType = "SpecialOffers";
           break;
         default:
           throw new Error("Unsupported item type");
@@ -47,7 +47,10 @@ const Delete: React.FC<DeleteProps> = ({ item, id }) => {
         method: "DELETE",
       });
 
+      console.log("delete product : ")
+      console.log(res)
       if (res.ok) {
+        console.log("res okay")
         setLoading(false);
         window.location.href = `/${itemType}`;
         toast.success(`${item} deleted`);

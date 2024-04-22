@@ -26,6 +26,6 @@ export const columns: ColumnDef<LimitedOffersType>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <Delete item="limitedoffer" id={row.original._id} />,
+    cell: ({ row }) => <Delete item="specialoffer" id={row.original._id} />,
   },
 ];

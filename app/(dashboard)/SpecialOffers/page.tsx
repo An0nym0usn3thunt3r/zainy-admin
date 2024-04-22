@@ -9,7 +9,7 @@ import Loader from "@/components/custom ui/Loader";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { DataTable } from "@/components/custom ui/DataTable";
-import { columns } from "@/components/LimitedOffers/LimitedOffersColumns";
+import { columns } from "@/components/SpecialOffers/SpecialOffersColumns";
 
 const LimitedOffersPage = () => {
   const router = useRouter();
@@ -19,7 +19,7 @@ const LimitedOffersPage = () => {
 
   const getProducts = async () => {
     try {
-      const res = await fetch("/api/special_offers", {
+      const res = await fetch("/api/SpecialOffers", {
         method: "GET",
       });
       const data = await res.json();

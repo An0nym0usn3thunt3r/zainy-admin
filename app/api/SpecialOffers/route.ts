@@ -73,8 +73,6 @@ export const GET = async () => {
 
     const products = await SpecialOffers.find();
 
-      console.log(products)
-
     return NextResponse.json(products, { status: 200 });
   } catch (err) {
     console.log("[products_GET]", err);

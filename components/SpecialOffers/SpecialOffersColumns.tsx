@@ -5,7 +5,7 @@ import Delete from "../custom ui/Delete";
 import Link from "next/link";
 import Image from "next/image";
 
-export const columns: ColumnDef<LimitedOffersType>[] = [
+export const columns: ColumnDef<SpecialOffersType>[] = [
   {
     accessorKey: "collections",
     header: "Collections",
@@ -26,6 +26,6 @@ export const columns: ColumnDef<LimitedOffersType>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => <Delete item="limitedoffer" id={row.original._id} />,
+    cell: ({ row }) => <Delete item="specialoffer" id={row.original._id} />,
   },
 ];

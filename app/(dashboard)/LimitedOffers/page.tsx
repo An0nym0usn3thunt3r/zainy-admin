@@ -19,7 +19,7 @@ const LimitedOffersPage = () => {
 
   const getProducts = async () => {
     try {
-      const res = await fetch("/api/limited_offers", {
+      const res = await fetch("/api/LimitedOffers", {
         method: "GET",
       });
       const data = await res.json();

@@ -87,8 +87,8 @@
 //     try {
 //       setLoading(true);
 //       const url = initialData
-//         ? `/api/limited_offers/${initialData._id}`
-//         : "/api/limited_offers";
+//         ? `/api/LimitedOffers/${initialData._id}`
+//         : "/api/LimitedOffers";
 //       const res = await fetch(url, {
 //         method: "POST",
 //         body: JSON.stringify(values),
