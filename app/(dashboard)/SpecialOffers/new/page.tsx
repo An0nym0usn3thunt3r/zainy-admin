@@ -1,9 +1,9 @@
-import SpecialOffersForm from "@/components/SpecialOffers/SpecialOffersForm";
+// import SpecialOffersForm from "@/components/SpecialOffers/SpecialOffersForm";
 
 const CreateProduct = () => {
   return (
-    <SpecialOffersForm/>
-    // <div>LimitedOffersForm</div>
+    // <SpecialOffersForm/>
+    <div>LimitedOffersForm</div>
   )
 }
 
