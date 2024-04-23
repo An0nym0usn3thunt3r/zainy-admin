@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import Delete from "../custom ui/Delete";
 import MultiText from "../custom ui/MultiText";
 import MultiSelect from "../custom ui/MultiSelect";
+import MultiSelectCat from "../custom ui/MultiSelectCat";
 import Loader from "../custom ui/Loader";
 
 const formSchema = z.object({
@@ -31,6 +32,7 @@ const formSchema = z.object({
   media: z.array(z.string()),
   category: z.string(),
   collections: z.array(z.string()),
+  categories: z.array(z.string()),
   tags: z.array(z.string()),
   sizes: z.array(z.string()),
   colors: z.array(z.string()),
@@ -47,6 +49,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
   const [loading, setLoading] = useState(true);
   const [collections, setCollections] = useState<CollectionType[]>([]);
+  const [categories, setCategories] = useState<CategoriesType[]>([{ _id:'1', name:'skin' }]);
 
   const getCollections = async () => {
     try {
@@ -62,7 +65,26 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     }
   };
 
+  // mihir: make api for get categories
+  const getCategories = async () => {
+    try {
+      const res = await fetch("/api/categories", {
+        method: "GET",
+      });
+      const data = await res.json();
+      await setCategories(data);
+      setLoading(false);
+      console.log("\n\n\ncategories set : ")
+      console.log(categories)
+      console.log(data)
+    } catch (err) {
+      console.log("[categories_GET]", err);
+      toast.error("Something went wrong! Please try again.");
+    }
+  };
+
   useEffect(() => {
+    getCategories();
     getCollections();
   }, []);
 
@@ -81,6 +103,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
           media: [],
           category: "",
           collections: [],
+          categories: [],
           tags: [],
           sizes: [],
           colors: [],
@@ -217,7 +240,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
               name="discount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Discount ($)</FormLabel>
+                  <FormLabel>Discount (AED)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -281,6 +304,35 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                         placeholder="Collections"
                         collections={collections}
                         value={field.value}
+                        onChange={(_id) =>
+                          field.onChange([...field.value, _id])
+                        }
+                        onRemove={(idToRemove) =>
+                          field.onChange([
+                            ...field.value.filter(
+                              (collectionId) => collectionId !== idToRemove
+                            ),
+                          ])
+                        }
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            )}
+            {categories.length > 0 && (
+              <FormField
+                control={form.control}
+                name="categories"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Categories</FormLabel>
+                    <FormControl>
+                      <MultiSelectCat
+                        placeholder="Categories"
+                        categories={categories}
+                        value={field.value?.length > 0  ? field.value : null}
                         onChange={(_id) =>
                           field.onChange([...field.value, _id])
                         }

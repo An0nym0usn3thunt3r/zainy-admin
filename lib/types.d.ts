@@ -5,6 +5,10 @@ type CollectionType = {
   image: string;
   products: ProductType[];
 }
+type CategoriesType = {
+  _id: string;
+  name: string;
+}
 type BlogType = {
   _id: string;
   title: string;
