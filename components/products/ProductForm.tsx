@@ -40,7 +40,7 @@ const formSchema = z.object({
 });
 
 interface ProductFormProps {
-  initialData?: ProductType | null; //Must have "?" to make it optional
+  initialData?: ProductType | null;
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
@@ -48,7 +48,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
   const [loading, setLoading] = useState(true);
   const [collections, setCollections] = useState<CollectionType[]>([]);
-  const [categories, setCategories] = useState<CategoriesType[]>([{ _id:'1', name:'skin' }]);
+  const [categories, setCategories] = useState<CategoriesType[]>([]);
 
   const getCollections = async () => {
     try {
@@ -64,7 +64,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     }
   };
 
-  // mihir: make api for get categories
   const getCategories = async () => {
     try {
       const res = await fetch("/api/categories", {
@@ -73,9 +72,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       const data = await res.json();
       await setCategories(data);
       setLoading(false);
-      console.log("\n\n\ncategories set : ")
-      console.log(categories)
-      console.log(data)
     } catch (err) {
       console.log("[categories_GET]", err);
       toast.error("Something went wrong! Please try again.");
@@ -123,6 +119,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
+      console.log("\n\n\n initialData : ")
+      console.log(initialData)
       const url = initialData
         ? `/api/products/${initialData._id}`
         : "/api/products";

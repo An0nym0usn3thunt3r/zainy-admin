@@ -44,13 +44,9 @@ export const POST = async (req: NextRequest) => {
 
 export const GET = async (req: NextRequest) => {
   try {
-    console.log("\n\n\nreqtest to get categories")
     await connectToDB()
 
     const categories = await Categories.find()
-    
-    console.log("\n\n\ncategories from db :")
-    console.log(categories)
 
     return NextResponse.json(categories, { status: 200 })
   } catch (err) {
