@@ -77,3 +77,13 @@ type SpecialOffersCollectionType = {
   link: string;
   image: string;
 }
+
+type colorCat = {  
+  color: string,
+  price: number,
+}
+
+type sizeCat = {  
+  size: string,
+  price: number,
+}

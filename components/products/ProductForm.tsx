@@ -49,6 +49,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const [loading, setLoading] = useState(true);
   const [collections, setCollections] = useState<CollectionType[]>([]);
   const [categories, setCategories] = useState<CategoriesType[]>([]);
+  const [colorCat, setColorCat] = useState<colorCat[]>([
+    { color: "red", price: 10 },
+    { color: "green", price: 10 },
+  ]);
+  const [sizeCat, setSizeCat] = useState<sizeCat[]>([
+    { size: "red", price: 10 },
+  ]);
 
   const getCollections = async () => {
     try {
@@ -116,11 +123,35 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     }
   };
 
+  const handleKeyPressMihir = (
+    e:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
+
+    let [type, id] = e.target.name.split('&');
+    
+    if(type == "cc"){
+      console.log("first")
+      let arr = colorCat;
+      console.log(arr)
+      arr[id].color = e.target.value + e.key;
+      console.log(arr)
+      setColorCat(arr)
+      console.log(colorCat)
+
+    }
+    
+  };
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
-      console.log("\n\n\n initialData : ")
-      console.log(initialData)
+      console.log("\n\n\n initialData : ");
+      console.log(initialData);
       const url = initialData
         ? `/api/products/${initialData._id}`
         : "/api/products";
@@ -311,8 +342,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <MultiSelectCat
                         placeholder="Categories"
                         categories={categories}
-                        value={field.value?.length > 0  ? field.value : null}
-                        onChange={(tag) => field.onChange([...field?.value || [], tag])}
+                        value={field.value?.length > 0 ? field.value : null}
+                        onChange={(tag) =>
+                          field.onChange([...(field?.value || []), tag])
+                        }
                         onRemove={(idToRemove) =>
                           field.onChange([
                             ...field.value.filter(
@@ -379,6 +412,91 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 </FormItem>
               )}
             />
+          </div>
+
+          <div className="md:grid md:grid-cols-2 gap-2">
+            <div className="border rounded">
+              <div className="flex flex-row justify-between text-center font-bold p-4">
+                <div>Color</div>
+                <div>Price</div>
+                <div>Action</div>
+              </div>
+              {colorCat?.length > 0 &&
+                colorCat.map((item, index) => (
+                  <>
+                    <div className="flex flex-row justify-between p-4">
+                      <input
+                        type="text"
+                        name={'cc&' + index}
+                        placeholder="color"
+                        value={item.color}
+                        className="w-1/3 border border-black rounded h-10 p-4"
+                        onKeyDown={handleKeyPressMihir}
+                      />
+                      <input
+                        type="number"
+                        name={'cp&' + index}
+                        placeholder="price"
+                        value={item.price}
+                        className="w-1/3 border border-black rounded h-10 p-4"
+                        onKeyDown={handleKeyPressMihir}
+                      />
+
+                      <div>Delete</div>
+                    </div>
+                  </>
+                ))}
+
+              <div className="flex justify-center items-center p-4 mt-10">
+                <Button type="button" variant={"outline"} className="mx-2">
+                  +
+                </Button>
+                <Button type="button" variant={"outline"}>
+                  Save changes
+                </Button>
+              </div>
+            </div>
+            <div className="border rounded">
+              <div className="flex flex-row justify-between text-center font-bold p-4">
+                <div>Size</div>
+                <div>Price</div>
+                <div>Action</div>
+              </div>
+              {sizeCat?.length > 0 &&
+                sizeCat.map((item, index) => (
+                  <>
+                    {/* <div>{index}</div>
+                    <div>{item.color}</div>
+                    <div>{item.price}</div> */}
+
+                    <div className="flex flex-row justify-between p-4">
+                      <input
+                        type="text"
+                        placeholder="color"
+                        value={item.size}
+                        className="w-1/3 border border-black rounded h-10 p-4"
+                      />
+                      <input
+                        type="number"
+                        placeholder="price"
+                        value={item.price}
+                        className="w-1/3 border border-black rounded h-10 p-4"
+                      />
+
+                      <div>delete</div>
+                    </div>
+                  </>
+                ))}
+
+              <div className="flex justify-center items-center p-4 mt-10">
+                <Button type="button" variant={"outline"} className="mx-2">
+                  +
+                </Button>
+                <Button type="button" variant={"outline"}>
+                  Save changes
+                </Button>
+              </div>
+            </div>
           </div>
 
           <div className="flex gap-10">
