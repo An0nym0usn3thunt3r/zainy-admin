@@ -45,7 +45,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
       <div className="flex gap-1 flex-wrap border rounded-md">
         {selected.map((collection) => (
           <Badge key={collection._id}>
-            {collection.name}
+            {collection.title}
             <button type="button" className="ml-1 hover:text-red-1" onClick={() => onRemove(collection._id)}>
               <X className="h-3 w-3" />
             </button>
@@ -74,7 +74,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                 }}
                 className="hover:bg-grey-2 cursor-pointer"
               >
-                {collection.name}
+                {collection.title}
               </CommandItem>
             ))}
           </CommandGroup>

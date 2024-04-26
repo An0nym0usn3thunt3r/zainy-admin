@@ -7,8 +7,12 @@ type CollectionType = {
 }
 type CategoriesType = {
   _id: string;
-  name: string;
+  title: string;
+  description: string;
+  image: string;
+  products: ProductType[];
 }
+
 type BlogType = {
   _id: string;
   title: string;
@@ -24,11 +28,12 @@ type ProductType = {
   description: string;
   media: [string];
   collections: [CollectionType];
+  categories: [CollectionType];
   tags: [string];
   sizes: [string];
   colors: [string];
   price: number;
-  expense: number;
+  discount: number;
   createdAt: Date;
   updatedAt: Date;
 }

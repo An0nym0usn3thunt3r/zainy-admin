@@ -98,6 +98,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
           collections: initialData.collections.map(
             (collection) => collection._id
           ),
+          categories: initialData.categories.map(
+            (category) => category._id
+          ),
         }
       : {
           title: "",
@@ -123,31 +126,59 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     }
   };
 
-  const handleKeyPressMihir = (
-    e:
-      | React.KeyboardEvent<HTMLInputElement>
-      | React.KeyboardEvent<HTMLTextAreaElement>
-  ) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-    }
-
-    let [type, id] = e.target.name.split('&');
-    
-    if(type == "cc"){
-      console.log("first")
-      let arr = colorCat;
-      console.log(arr)
-      arr[id].color = e.target.value + e.key;
-      console.log(arr)
-      setColorCat(arr)
-      console.log(colorCat)
-
-    }
-    
+  const handleColorChange = (index:any, event:any) => {
+    const newColors = [...colorCat];
+    newColors[index].color = event.target.value;
+    setColorCat(newColors);
   };
 
+  const handleSizeChange = (index:any, event:any) => {
+    const newSize = [...sizeCat];
+    newSize[index].size = event.target.value;
+    setSizeCat(newSize);
+  };
+
+  const handleColorPriceChange = (index:any, event:any) => {
+    const newColors = [...colorCat];
+    newColors[index].price = event.target.value;
+    setColorCat(newColors);
+  };
+
+  const handleSizePriceChange = (index:any, event:any) => {
+    const newSize = [...sizeCat];
+    newSize[index].price = event.target.value;
+    setSizeCat(newSize);
+  };
+
+  const deleteColorCat = (index: number) => {
+    setColorCat((prevColorCat) => {
+      const newColorCat = [...prevColorCat];
+      newColorCat.splice(index, 1);
+      return newColorCat;
+    });
+  };
+  
+  const deleteSizeCat = (index: number) => {
+    setSizeCat((prevSizeCat) => {
+      const newSizeCat = [...prevSizeCat];
+      newSizeCat.splice(index, 1);
+      return newSizeCat;
+    });
+  };
+
+  const addColorCatField = () => {
+    setColorCat(prevColorCat => [...prevColorCat, { color: "", price: 0 }]);
+  };
+
+  const addSizeCatField = () => {
+    setSizeCat(prevSizeCat => [...prevSizeCat, { size: "", price: 0 }]);
+  };
+  
+  
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log("\n\n\nform:")
+    console.log(values)
     try {
       setLoading(true);
       console.log("\n\n\n initialData : ");
@@ -162,8 +193,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       if (res.ok) {
         setLoading(false);
         toast.success(`Product ${initialData ? "updated" : "created"}`);
-        window.location.href = "/products";
-        router.push("/products");
+        // window.location.href = "/products";
+        // router.push("/products");
       }
     } catch (err) {
       console.log("[products_POST]", err);
@@ -302,6 +333,40 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 </FormItem>
               )}
             />
+            <FormField
+            control={form.control}
+            name="sizes"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>size</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="size"
+                    {...field}
+                    value={JSON.stringify(sizeCat)}
+                    />
+                </FormControl>
+                <FormMessage className="text-red-1" />
+              </FormItem>
+            )}
+          />
+            <FormField
+              control={form.control}
+              name="colors"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>colors</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="colors"
+                      value={JSON.stringify(colorCat)}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-1" />
+                </FormItem>
+              )}
+            />
             {collections.length > 0 && (
               <FormField
                 control={form.control}
@@ -360,58 +425,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             )}
-            <FormField
-              control={form.control}
-              name="colors"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Colors</FormLabel>
-                  <FormControl>
-                    <MultiText
-                      placeholder="Colors"
-                      value={field.value}
-                      onChange={(color) =>
-                        field.onChange([...field.value, color])
-                      }
-                      onRemove={(colorToRemove) =>
-                        field.onChange([
-                          ...field.value.filter(
-                            (color) => color !== colorToRemove
-                          ),
-                        ])
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-1" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="sizes"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Sizes</FormLabel>
-                  <FormControl>
-                    <MultiText
-                      placeholder="Sizes"
-                      value={field.value}
-                      onChange={(size) =>
-                        field.onChange([...field.value, size])
-                      }
-                      onRemove={(sizeToRemove) =>
-                        field.onChange([
-                          ...field.value.filter(
-                            (size) => size !== sizeToRemove
-                          ),
-                        ])
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-1" />
-                </FormItem>
-              )}
-            />
           </div>
 
           <div className="md:grid md:grid-cols-2 gap-2">
@@ -419,38 +432,42 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
               <div className="flex flex-row justify-between text-center font-bold p-4">
                 <div>Color</div>
                 <div>Price</div>
+                <div>Total</div>
                 <div>Action</div>
               </div>
               {colorCat?.length > 0 &&
                 colorCat.map((item, index) => (
                   <>
-                    <div className="flex flex-row justify-between p-4">
+                    <div className="flex flex-row justify-between p-4" key={index}>
                       <input
                         type="text"
-                        name={'cc&' + index}
                         placeholder="color"
                         value={item.color}
                         className="w-1/3 border border-black rounded h-10 p-4"
-                        onKeyDown={handleKeyPressMihir}
+                        onChange={(event) => handleColorChange(index, event)}
                       />
                       <input
                         type="number"
-                        name={'cp&' + index}
                         placeholder="price"
                         value={item.price}
                         className="w-1/3 border border-black rounded h-10 p-4"
-                        onKeyDown={handleKeyPressMihir}
+                        onChange={(event) => handleColorPriceChange(index, event)}
+                      />
+                      <input
+                        type="number"
+                        placeholder="total"
+                        value={parseFloat(item.price) + parseFloat(form.getValues("price"))}
+                        className="w-1/3 border border-black rounded h-10 p-4"
+                        onChange={(event) => handleSizePriceChange(index, event)}
                       />
 
-                      <div>Delete</div>
+                      <div><Button type="button" variant={"outline"} onClick={() => deleteColorCat(index)}>Delete</Button></div>
                     </div>
                   </>
                 ))}
 
               <div className="flex justify-center items-center p-4 mt-10">
-                <Button type="button" variant={"outline"} className="mx-2">
-                  +
-                </Button>
+                <Button type="button" variant={"outline"} className="mx-2" onClick={addColorCatField}>+</Button>
                 <Button type="button" variant={"outline"}>
                   Save changes
                 </Button>
@@ -460,38 +477,43 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
               <div className="flex flex-row justify-between text-center font-bold p-4">
                 <div>Size</div>
                 <div>Price</div>
+                <div>Total</div>
                 <div>Action</div>
               </div>
               {sizeCat?.length > 0 &&
                 sizeCat.map((item, index) => (
                   <>
-                    {/* <div>{index}</div>
-                    <div>{item.color}</div>
-                    <div>{item.price}</div> */}
-
-                    <div className="flex flex-row justify-between p-4">
+                    <div className="flex flex-row justify-between p-4" key={index}>
                       <input
                         type="text"
-                        placeholder="color"
+                        placeholder="size"
                         value={item.size}
                         className="w-1/3 border border-black rounded h-10 p-4"
+                        onChange={(event) => handleSizeChange(index, event)}
                       />
                       <input
                         type="number"
                         placeholder="price"
                         value={item.price}
                         className="w-1/3 border border-black rounded h-10 p-4"
+                        onChange={(event) => handleSizePriceChange(index, event)}
+                      />
+                      <input
+                        type="number"
+                        placeholder="total"
+                        value={parseFloat(item.price) + parseFloat(form.getValues("price"))}
+                        className="w-1/3 border border-black rounded h-10 p-4"
+                        onChange={(event) => handleSizePriceChange(index, event)}
                       />
 
-                      <div>delete</div>
+                      <div><Button type="button" variant={"outline"} onClick={() => deleteSizeCat(index)}>Delete</Button></div>
                     </div>
                   </>
                 ))}
 
               <div className="flex justify-center items-center p-4 mt-10">
-                <Button type="button" variant={"outline"} className="mx-2">
-                  +
-                </Button>
+                <Button type="button" variant={"outline"} className="mx-2" onClick={addSizeCatField}>+</Button>
+
                 <Button type="button" variant={"outline"}>
                   Save changes
                 </Button>

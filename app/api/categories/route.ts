@@ -47,6 +47,7 @@ export const GET = async (req: NextRequest) => {
     await connectToDB()
 
     const categories = await Categories.find()
+    console.log(categories)
 
     return NextResponse.json(categories, { status: 200 })
   } catch (err) {

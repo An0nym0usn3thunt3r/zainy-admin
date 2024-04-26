@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/lib/mongoDB";
 import Product from "@/lib/models/Product";
 import Collection from "@/lib/models/Collection";
+import Categories from "@/lib/models/Categories";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -59,6 +60,16 @@ export const POST = async (req: NextRequest) => {
       }
     }
 
+    // if (categories) {
+    //   for (const categoriesId of categories) {
+    //     const category = await Categories.findById(categoriesId);
+    //     if (category) {
+    //       category.products.push(newProduct._id);
+    //       await category.save();
+    //     }
+    //   }
+    // }
+
     return NextResponse.json(newProduct, { status: 200 });
   } catch (err) {
     console.log("[products_POST]", err);
@@ -72,7 +83,10 @@ export const GET = async (req: NextRequest) => {
 
     const products = await Product.find()
       .sort({ createdAt: "desc" })
-      .populate({ path: "collections", model: Collection });
+      .populate([
+        { path: "collections", model: Collection },
+        { path: "categories", model: Categories }
+      ]);
 
     return NextResponse.json(products, { status: 200 });
   } catch (err) {
