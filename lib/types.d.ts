@@ -22,7 +22,7 @@ type BlogType = {
   image: string;
 }
 
-type ProductType = {
+type ProductType2 = {
   _id: string;
   title: string;
   description: string;
@@ -34,6 +34,44 @@ type ProductType = {
   colors: [string];
   price: number;
   discount: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+type ProductType = {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  discount: number;
+  collections: [CollectionType];
+  categories: [CollectionType];
+  tags: [string];
+  color1: string;
+  color2: string;
+  color3: string;
+  color4: string;
+  color5: string;
+  cp1: number;
+  cp2: number;
+  cp3: number;
+  cp4: number;
+  cp5: number;
+  ci1: [string];
+  ci2: [string];
+  ci3: [string];
+  ci4: [string];
+  ci5: [string];
+  size1: string;
+  size2: string;
+  size3: string;
+  size4: string;
+  size5: string;
+  sp1: number;
+  sp2: number;
+  sp3: number;
+  sp4: number;
+  sp5: number;
   createdAt: Date;
   updatedAt: Date;
 }

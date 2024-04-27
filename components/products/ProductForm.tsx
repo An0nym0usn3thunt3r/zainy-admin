@@ -25,22 +25,53 @@ import MultiText from "../custom ui/MultiText";
 import MultiSelect from "../custom ui/MultiSelect";
 import MultiSelectCat from "../custom ui/MultiSelectCat";
 import Loader from "../custom ui/Loader";
+import { Accordion, AccordionItem } from "@nextui-org/react";
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableColumn,
+  TableRow,
+  TableCell,
+} from "@nextui-org/react";
 
 const formSchema = z.object({
   title: z.string().min(2).max(100),
   description: z.string().min(2).max(500).trim(),
-  media: z.array(z.string()),
+  price: z.coerce.number().min(0.1),
+  discount: z.coerce.number().optional(),
   collections: z.array(z.string()),
   categories: z.array(z.string()),
   tags: z.array(z.string()),
-  sizes: z.array(z.string()),
-  colors: z.array(z.string()),
-  price: z.coerce.number().min(0.1),
-  discount: z.coerce.number().min(0.1),
+  color1: z.string(),
+  color2: z.string(),
+  color3: z.string(),
+  color4: z.string(),
+  color5: z.string(),
+  cp1: z.coerce.number(),
+  cp2: z.coerce.number(),
+  cp3: z.coerce.number(),
+  cp4: z.coerce.number(),
+  cp5: z.coerce.number(),
+  ci1: z.array(z.string()),
+  ci2: z.array(z.string()),
+  ci3: z.array(z.string()),
+  ci4: z.array(z.string()),
+  ci5: z.array(z.string()),
+  size1: z.string(),
+  size2: z.string(),
+  size3: z.string(),
+  size4: z.string(),
+  size5: z.string(),
+  sp1: z.coerce.number(),
+  sp2: z.coerce.number(),
+  sp3: z.coerce.number(),
+  sp4: z.coerce.number(),
+  sp5: z.coerce.number(),
 });
 
 interface ProductFormProps {
-  initialData?: ProductType | null;
+  initialData?: ProductType2 | null;
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
@@ -49,13 +80,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const [loading, setLoading] = useState(true);
   const [collections, setCollections] = useState<CollectionType[]>([]);
   const [categories, setCategories] = useState<CategoriesType[]>([]);
-  const [colorCat, setColorCat] = useState<colorCat[]>([
-    { color: "red", price: 10 },
-    { color: "green", price: 10 },
-  ]);
-  const [sizeCat, setSizeCat] = useState<sizeCat[]>([
-    { size: "red", price: 10 },
-  ]);
 
   const getCollections = async () => {
     try {
@@ -98,21 +122,41 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
           collections: initialData.collections.map(
             (collection) => collection._id
           ),
-          categories: initialData.categories.map(
-            (category) => category._id
-          ),
+          categories: initialData.categories.map((category) => category._id),
         }
       : {
           title: "",
           description: "",
-          media: [],
+          price: 0.1,
+          discount: 0.1,
           collections: [],
           categories: [],
           tags: [],
-          sizes: [],
-          colors: [],
-          price: 0.1,
-          discount: 0.1,
+          color1: "",
+          color2: "",
+          color3: "",
+          color4: "",
+          color5: "",
+          cp1: 0,
+          cp2: 0,
+          cp3: 0,
+          cp4: 0,
+          cp5: 0,
+          ci1: [],
+          ci2: [],
+          ci3: [],
+          ci4: [],
+          ci5: [],
+          size1: "",
+          size2: "",
+          size3: "",
+          size4: "",
+          size5: "",
+          sp1: 0,
+          sp2: 0,
+          sp3: 0,
+          sp4: 0,
+          sp5: 0,
         },
   });
 
@@ -126,59 +170,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     }
   };
 
-  const handleColorChange = (index:any, event:any) => {
-    const newColors = [...colorCat];
-    newColors[index].color = event.target.value;
-    setColorCat(newColors);
-  };
-
-  const handleSizeChange = (index:any, event:any) => {
-    const newSize = [...sizeCat];
-    newSize[index].size = event.target.value;
-    setSizeCat(newSize);
-  };
-
-  const handleColorPriceChange = (index:any, event:any) => {
-    const newColors = [...colorCat];
-    newColors[index].price = event.target.value;
-    setColorCat(newColors);
-  };
-
-  const handleSizePriceChange = (index:any, event:any) => {
-    const newSize = [...sizeCat];
-    newSize[index].price = event.target.value;
-    setSizeCat(newSize);
-  };
-
-  const deleteColorCat = (index: number) => {
-    setColorCat((prevColorCat) => {
-      const newColorCat = [...prevColorCat];
-      newColorCat.splice(index, 1);
-      return newColorCat;
-    });
-  };
-  
-  const deleteSizeCat = (index: number) => {
-    setSizeCat((prevSizeCat) => {
-      const newSizeCat = [...prevSizeCat];
-      newSizeCat.splice(index, 1);
-      return newSizeCat;
-    });
-  };
-
-  const addColorCatField = () => {
-    setColorCat(prevColorCat => [...prevColorCat, { color: "", price: 0 }]);
-  };
-
-  const addSizeCatField = () => {
-    setSizeCat(prevSizeCat => [...prevSizeCat, { size: "", price: 0 }]);
-  };
-  
-  
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("\n\n\nform:")
-    console.log(values)
+    console.log("\n\n\nform:");
+    console.log(values);
     try {
       setLoading(true);
       console.log("\n\n\n initialData : ");
@@ -252,29 +246,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="media"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Image</FormLabel>
-                <FormControl>
-                  <ImageUpload
-                    value={field.value}
-                    onChange={(url) => field.onChange([...field.value, url])}
-                    onRemove={(url) =>
-                      field.onChange([
-                        ...field.value.filter((image) => image !== url),
-                      ])
-                    }
-                  />
-                </FormControl>
-                <FormMessage className="text-red-1" />
-              </FormItem>
-            )}
-          />
 
-          <div className="md:grid md:grid-cols-3 gap-8">
+          <div className="md:grid md:grid-cols-2 gap-8 p-8">
             <FormField
               control={form.control}
               name="price"
@@ -305,62 +278,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       placeholder="Discount"
                       {...field}
                       onKeyDown={handleKeyPress}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-1" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="tags"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tags</FormLabel>
-                  <FormControl>
-                    <MultiText
-                      placeholder="Tags"
-                      value={field.value}
-                      onChange={(tag) => field.onChange([...field.value, tag])}
-                      onRemove={(tagToRemove) =>
-                        field.onChange([
-                          ...field.value.filter((tag) => tag !== tagToRemove),
-                        ])
-                      }
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-1" />
-                </FormItem>
-              )}
-            />
-            <FormField
-            control={form.control}
-            name="sizes"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>size</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="size"
-                    {...field}
-                    value={JSON.stringify(sizeCat)}
-                    />
-                </FormControl>
-                <FormMessage className="text-red-1" />
-              </FormItem>
-            )}
-          />
-            <FormField
-              control={form.control}
-              name="colors"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>colors</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="colors"
-                      value={JSON.stringify(colorCat)}
                     />
                   </FormControl>
                   <FormMessage className="text-red-1" />
@@ -427,99 +344,634 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
             )}
           </div>
 
-          <div className="md:grid md:grid-cols-2 gap-2">
-            <div className="border rounded">
-              <div className="flex flex-row justify-between text-center font-bold p-4">
-                <div>Color</div>
-                <div>Price</div>
-                <div>Total</div>
-                <div>Action</div>
-              </div>
-              {colorCat?.length > 0 &&
-                colorCat.map((item, index) => (
-                  <>
-                    <div className="flex flex-row justify-between p-4" key={index}>
-                      <input
-                        type="text"
-                        placeholder="color"
-                        value={item.color}
-                        className="w-1/3 border border-black rounded h-10 p-4"
-                        onChange={(event) => handleColorChange(index, event)}
-                      />
-                      <input
-                        type="number"
-                        placeholder="price"
-                        value={item.price}
-                        className="w-1/3 border border-black rounded h-10 p-4"
-                        onChange={(event) => handleColorPriceChange(index, event)}
-                      />
-                      <input
-                        type="number"
-                        placeholder="total"
-                        value={parseFloat(item.price) + parseFloat(form.getValues("price"))}
-                        className="w-1/3 border border-black rounded h-10 p-4"
-                        onChange={(event) => handleSizePriceChange(index, event)}
-                      />
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tags</FormLabel>
+                <FormControl>
+                  <MultiText
+                    placeholder="Tags"
+                    value={field.value}
+                    onChange={(tag) => field.onChange([...field.value, tag])}
+                    onRemove={(tagToRemove) =>
+                      field.onChange([
+                        ...field.value.filter((tag) => tag !== tagToRemove),
+                      ])
+                    }
+                  />
+                </FormControl>
+                <FormMessage className="text-red-1" />
+              </FormItem>
+            )}
+          />
 
-                      <div><Button type="button" variant={"outline"} onClick={() => deleteColorCat(index)}>Delete</Button></div>
-                    </div>
-                  </>
-                ))}
-
-              <div className="flex justify-center items-center p-4 mt-10">
-                <Button type="button" variant={"outline"} className="mx-2" onClick={addColorCatField}>+</Button>
-                <Button type="button" variant={"outline"}>
-                  Save changes
-                </Button>
-              </div>
-            </div>
-            <div className="border rounded">
-              <div className="flex flex-row justify-between text-center font-bold p-4">
-                <div>Size</div>
-                <div>Price</div>
-                <div>Total</div>
-                <div>Action</div>
-              </div>
-              {sizeCat?.length > 0 &&
-                sizeCat.map((item, index) => (
-                  <>
-                    <div className="flex flex-row justify-between p-4" key={index}>
-                      <input
-                        type="text"
-                        placeholder="size"
-                        value={item.size}
-                        className="w-1/3 border border-black rounded h-10 p-4"
-                        onChange={(event) => handleSizeChange(index, event)}
+          <Accordion>
+            <AccordionItem
+              key="1"
+              aria-label="Color Varients"
+              title="Color Varients"
+            >
+              <Table aria-label="Color varient table">
+                <TableHeader>
+                  <TableColumn> </TableColumn>
+                  <TableColumn>Color</TableColumn>
+                  <TableColumn>Difference in Price</TableColumn>
+                  <TableColumn>Total Price</TableColumn>
+                  <TableColumn>Image</TableColumn>
+                </TableHeader>
+                <TableBody>
+                  <TableRow key="1">
+                    <TableCell>1.</TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="color1"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                placeholder="Color 1"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
                       />
-                      <input
-                        type="number"
-                        placeholder="price"
-                        value={item.price}
-                        className="w-1/3 border border-black rounded h-10 p-4"
-                        onChange={(event) => handleSizePriceChange(index, event)}
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="cp1"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="Price 1"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
                       />
-                      <input
-                        type="number"
-                        placeholder="total"
-                        value={parseFloat(item.price) + parseFloat(form.getValues("price"))}
-                        className="w-1/3 border border-black rounded h-10 p-4"
-                        onChange={(event) => handleSizePriceChange(index, event)}
+                    </TableCell>
+                    <TableCell>
+                      {form?.getValues("cp1") + form?.getValues("price")}
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="ci1"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <ImageUpload
+                                value={field.value}
+                                onChange={(url) =>
+                                  field.onChange([...field.value, url])
+                                }
+                                onRemove={(url) =>
+                                  field.onChange([
+                                    ...field.value.filter(
+                                      (image) => image !== url
+                                    ),
+                                  ])
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
                       />
-
-                      <div><Button type="button" variant={"outline"} onClick={() => deleteSizeCat(index)}>Delete</Button></div>
-                    </div>
-                  </>
-                ))}
-
-              <div className="flex justify-center items-center p-4 mt-10">
-                <Button type="button" variant={"outline"} className="mx-2" onClick={addSizeCatField}>+</Button>
-
-                <Button type="button" variant={"outline"}>
-                  Save changes
-                </Button>
-              </div>
-            </div>
-          </div>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key="2">
+                    <TableCell>2.</TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="color2"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                placeholder="Color 2"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="cp2"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="Price 2"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {form?.getValues("cp2") + form?.getValues("price")}
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="ci2"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <ImageUpload
+                                value={field.value}
+                                onChange={(url) =>
+                                  field.onChange([...field.value, url])
+                                }
+                                onRemove={(url) =>
+                                  field.onChange([
+                                    ...field.value.filter(
+                                      (image) => image !== url
+                                    ),
+                                  ])
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key="3">
+                    <TableCell>3.</TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="color3"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                placeholder="Color 3"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="cp3"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="Price 3"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {form?.getValues("cp3") + form?.getValues("price")}
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="ci3"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <ImageUpload
+                                value={field.value}
+                                onChange={(url) =>
+                                  field.onChange([...field.value, url])
+                                }
+                                onRemove={(url) =>
+                                  field.onChange([
+                                    ...field.value.filter(
+                                      (image) => image !== url
+                                    ),
+                                  ])
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key="4">
+                    <TableCell>4.</TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="color4"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                placeholder="Color 4"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="cp4"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="Price 4"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {form?.getValues("cp4") + form?.getValues("price")}
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="ci4"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <ImageUpload
+                                value={field.value}
+                                onChange={(url) =>
+                                  field.onChange([...field.value, url])
+                                }
+                                onRemove={(url) =>
+                                  field.onChange([
+                                    ...field.value.filter(
+                                      (image) => image !== url
+                                    ),
+                                  ])
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key="5">
+                    <TableCell>5.</TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="color5"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                placeholder="Color 5"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="cp5"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="Price 5"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {form?.getValues("cp5") + form?.getValues("price")}
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="ci5"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <ImageUpload
+                                value={field.value}
+                                onChange={(url) =>
+                                  field.onChange([...field.value, url])
+                                }
+                                onRemove={(url) =>
+                                  field.onChange([
+                                    ...field.value.filter(
+                                      (image) => image !== url
+                                    ),
+                                  ])
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </AccordionItem>
+            <AccordionItem
+              key="2"
+              aria-label="Size Varients"
+              title="Size Varients"
+            >
+              <Table aria-label="price varient table">
+                <TableHeader>
+                  <TableColumn> </TableColumn>
+                  <TableColumn>Size</TableColumn>
+                  <TableColumn>Difference in Price</TableColumn>
+                  <TableColumn>Total Price</TableColumn>
+                </TableHeader>
+                <TableBody>
+                  <TableRow key="1">
+                    <TableCell>1.</TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="size1"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                placeholder="Size 1"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="sp1"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="Price 1"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {form?.getValues("sp1") + form?.getValues("price")}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key="2">
+                    <TableCell>2.</TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="size2"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                placeholder="Size 2"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="sp2"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="Price 2"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {form?.getValues("sp2") + form?.getValues("price")}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key="3">
+                    <TableCell>3.</TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="size3"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                placeholder="Size 3"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="sp3"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="Price 3"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {form?.getValues("sp3") + form?.getValues("price")}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key="4">
+                    <TableCell>4.</TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="size4"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                placeholder="Size 4"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="sp4"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="Price 4"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {form?.getValues("sp4") + form?.getValues("price")}
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key="5">
+                    <TableCell>5.</TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="size5"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                placeholder="Size 5"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <FormField
+                        control={form.control}
+                        name="sp5"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="number"
+                                placeholder="Price 5"
+                                {...field}
+                                onKeyDown={handleKeyPress}
+                              />
+                            </FormControl>
+                            <FormMessage className="text-red-1" />
+                          </FormItem>
+                        )}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      {form?.getValues("sp5") + form?.getValues("price")}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </AccordionItem>
+          </Accordion>
 
           <div className="flex gap-10">
             <Button type="submit" className="bg-blue-1 text-white">

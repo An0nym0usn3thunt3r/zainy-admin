@@ -19,48 +19,17 @@ export const POST = async (req: NextRequest) => {
     const {
       title,
       description,
+      media,
+      categories,
+      collections,
+      tags,
+      sizes,
+      colors,
       price,
       discount,
-      collections,
-      categories,
-      tags,
-      color1,
-      color2,
-      color3,
-      color4,
-      color5,
-      cp1,
-      cp2,
-      cp3,
-      cp4,
-      cp5,
-      ci1,
-      ci2,
-      ci3,
-      ci4,
-      ci5,
-      size1,
-      size2,
-      size3,
-      size4,
-      size5,
-      sp1,
-      sp2,
-      sp3,
-      sp4,
-      sp5,
     } = await req.json();
 
-    if (
-      !title ||
-      !description ||
-      !categories ||
-      !price ||
-      !color1 ||
-      !cp1 ||
-      !ci1 ||
-      !discount
-    ) {
+    if (!title || !description || !media || !categories || !price || !discount) {
       return new NextResponse("Not enough data to create a product", {
         status: 400,
       });
@@ -69,36 +38,14 @@ export const POST = async (req: NextRequest) => {
     const newProduct = await Product.create({
       title,
       description,
+      media,
+      categories,
+      collections,
+      tags,
+      sizes,
+      colors,
       price,
       discount,
-      collections,
-      categories,
-      tags,
-      color1,
-      color2,
-      color3,
-      color4,
-      color5,
-      cp1,
-      cp2,
-      cp3,
-      cp4,
-      cp5,
-      ci1,
-      ci2,
-      ci3,
-      ci4,
-      ci5,
-      size1,
-      size2,
-      size3,
-      size4,
-      size5,
-      sp1,
-      sp2,
-      sp3,
-      sp4,
-      sp5,
     });
 
     await newProduct.save();
@@ -138,7 +85,7 @@ export const GET = async (req: NextRequest) => {
       .sort({ createdAt: "desc" })
       .populate([
         { path: "collections", model: Collection },
-        { path: "categories", model: Categories },
+        { path: "categories", model: Categories }
       ]);
 
     return NextResponse.json(products, { status: 200 });
@@ -149,3 +96,4 @@ export const GET = async (req: NextRequest) => {
 };
 
 export const dynamic = "force-dynamic";
+
