@@ -40,7 +40,7 @@ export const columns: ColumnDef<ProductType>[] = [
     header: "Image",
     cell: ({ row }) => (
       <Image
-        src={row.original.media[0]}
+        src={row.original.ci1[0]}
         width={200}
         height={200}
         alt="image"
