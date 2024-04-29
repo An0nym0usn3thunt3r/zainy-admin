@@ -2,35 +2,35 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
 
 import { connectToDB } from "@/lib/mongoDB";
-import Collection from "@/lib/models/Collection";
 import Product from "@/lib/models/Product";
+import Categories from "@/lib/models/Categories";
 
 export const GET = async (
   req: NextRequest,
-  { params }: { params: { collectionId: string } }
+  { params }: { params: { categoriesId: string } }
 ) => {
   try {
     await connectToDB();
 
-    const collection = await Collection.findById(params.collectionId).populate({ path: "products", model: Product });
+    const CategoriesModal = await Categories.findById(params.categoriesId).populate({ path: "products", model: Product });
 
-    if (!collection) {
+    if (!CategoriesModal) {
       return new NextResponse(
-        JSON.stringify({ message: "Collection not found" }),
+        JSON.stringify({ message: "Categories not found" }),
         { status: 404 }
       );
     }
 
-    return NextResponse.json(collection, { status: 200 });
+    return NextResponse.json(CategoriesModal, { status: 200 });
   } catch (err) {
-    console.log("[collectionId_GET]", err);
+    console.log("[categoriesId_GET]", err);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
 
 export const POST = async (
   req: NextRequest,
-  { params }: { params: { collectionId: string } }
+  { params }: { params: { categoriesId: string } }
 ) => {
   try {
     const { userId } = auth();
@@ -41,10 +41,10 @@ export const POST = async (
 
     await connectToDB();
 
-    let collection = await Collection.findById(params.collectionId);
+    let CategoriesModal = await Categories.findById(params.categoriesId);
 
-    if (!collection) {
-      return new NextResponse("Collection not found", { status: 404 });
+    if (!CategoriesModal) {
+      return new NextResponse("Categories not found", { status: 404 });
     }
 
     const { title, description, image } = await req.json();
@@ -53,24 +53,24 @@ export const POST = async (
       return new NextResponse("Title and image are required", { status: 400 });
     }
 
-    collection = await Collection.findByIdAndUpdate(
-      params.collectionId,
+    CategoriesModal = await Categories.findByIdAndUpdate(
+      params.categoriesId,
       { title, description, image },
       { new: true }
     );
 
-    await collection.save();
+    await CategoriesModal.save();
 
-    return NextResponse.json(collection, { status: 200 });
+    return NextResponse.json(Categories, { status: 200 });
   } catch (err) {
-    console.log("[collectionId_POST]", err);
+    console.log("[categoriesId_POST]", err);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
 
 export const DELETE = async (
   req: NextRequest,
-  { params }: { params: { collectionId: string } }
+  { params }: { params: { categoriesId: string } }
 ) => {
   try {
     const { userId } = auth();
@@ -81,16 +81,16 @@ export const DELETE = async (
 
     await connectToDB();
 
-    await Collection.findByIdAndDelete(params.collectionId);
+    await Categories.findByIdAndDelete(params.categoriesId);
 
     await Product.updateMany(
-      { collections: params.collectionId },
-      { $pull: { collections: params.collectionId } }
+      { Categoriess: params.categoriesId },
+      { $pull: { Categoriess: params.categoriesId } }
     );
     
-    return new NextResponse("Collection is deleted", { status: 200 });
+    return new NextResponse("Categories is deleted", { status: 200 });
   } catch (err) {
-    console.log("[collectionId_DELETE]", err);
+    console.log("[categoriesId_DELETE]", err);
     return new NextResponse("Internal error", { status: 500 });
   }
 };
