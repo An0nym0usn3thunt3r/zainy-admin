@@ -25,22 +25,16 @@ export const POST = async (req: NextRequest) => {
       return new NextResponse("Title and image are required", { status: 400 })
     }
 
-    console.log("all right")
-
     const newCategories = await Categories.create({
       title,
       description,
       image,
     })
 
-    console.log(newCategories)
-
     await newCategories.save()
-    console.log("done")
 
     return NextResponse.json(newCategories, { status: 200 })
   } catch (err) {
-    console.log("[Categoriess_POST]", err)
     return new NextResponse("Internal Server Error", { status: 500 })
   }
 }
@@ -50,7 +44,6 @@ export const GET = async (req: NextRequest) => {
     await connectToDB()
 
     const categories = await Categories.find()
-    console.log(categories)
 
     return NextResponse.json(categories, { status: 200 })
   } catch (err) {
