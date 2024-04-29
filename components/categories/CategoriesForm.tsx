@@ -80,11 +80,17 @@ const CategoriesForm: React.FC<CategoriesFormProps> = ({ initialData }) => {
     <div className="p-10">
       {initialData ? (
         <div className="flex items-center justify-between">
-          <p className="text-heading2-bold">Edit Categorie</p>
+          <p className="text-heading2-bold">
+            Edit Collection
+            {/* Edit Categorie */}
+            </p>
           <Delete id={initialData._id} item="categorie" />
         </div>
       ) : (
-        <p className="text-heading2-bold">Create Categorie</p>
+        <p className="text-heading2-bold">
+          Create Collection
+          {/* Create Categorie */}
+          </p>
       )}
       <Separator className="bg-grey-1 mt-4 mb-7" />
       <Form {...form}>

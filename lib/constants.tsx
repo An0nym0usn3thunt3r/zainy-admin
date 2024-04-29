@@ -16,12 +16,14 @@ export const navLinks = [
   {
     url: "/collections",
     icon: <Shapes />,
-    label: "Collections",
+    label: "Categories",
+    // label: "Collections",
   },
   {
     url: "/categories",
     icon: <Shapes />,
-    label: "Categories",
+    label: "Collections",
+    // label: "Categories",
   },
   {
     url: "/products",
