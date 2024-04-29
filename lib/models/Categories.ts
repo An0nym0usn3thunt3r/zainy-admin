@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const CategoriesSchema = new mongoose.Schema({
+  objectId: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: mongoose.Types.ObjectId,
+    unique: true
+  },
   title: {
     type: String,
     required: true,

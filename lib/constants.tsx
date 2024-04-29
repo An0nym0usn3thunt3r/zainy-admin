@@ -19,6 +19,11 @@ export const navLinks = [
     label: "Collections",
   },
   {
+    url: "/categories",
+    icon: <Shapes />,
+    label: "Categories",
+  },
+  {
     url: "/products",
     icon: <Tag />,
     label: "Products",

@@ -34,6 +34,9 @@ const Delete: React.FC<DeleteProps> = ({ item, id }) => {
         case "collections":
           itemType = "collections";
           break;
+        case "categories":
+          itemType = "categories";
+          break;
         case "limitedoffer":
           itemType = "LimitedOffers";
           break;
