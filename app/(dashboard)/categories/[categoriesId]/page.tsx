@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react"
 import Loader from "@/components/custom ui/Loader"
 import CategoriesForm from "@/components/categories/CategoriesForm"
 
-const categoriesDetails = ({ params }: { params: { categoriesId: string }}) => {
+const CategoriesDetails = ({ params }: { params: { categoriesId: string }}) => {
   const [loading, setLoading] = useState(true)
   const [categoriesDetails, setCategoriesDetails] = useState<CategoriesType | null>(null)
 
@@ -33,4 +33,4 @@ const categoriesDetails = ({ params }: { params: { categoriesId: string }}) => {
   )
 }
 
-export default categoriesDetails
+export default CategoriesDetails
