@@ -1,16 +1,25 @@
-type CollectionType = {
-  _id: string;
-  title: string;
-  description: string;
-  image: string;
-  products: ProductType[];
-}
 type CategoriesType = {
   _id: string;
   title: string;
   description: string;
-  image: string;
-  products: ProductType[];
+  image: [string];
+}
+
+type CollectionType = {
+  _id: string;
+  title: string;
+  description: string;
+  image: [string];
+  categories: [CategoriesType];
+}
+
+type SubCollectionType = {
+  _id: string;
+  title: string;
+  description: string;
+  image: [string];
+  categories: [CategoriesType];
+  collections: [CollectionType];
 }
 
 type BlogType = {
@@ -22,30 +31,16 @@ type BlogType = {
   image: string;
 }
 
-type ProductType2 = {
-  _id: string;
-  title: string;
-  description: string;
-  media: [string];
-  collections: [CollectionType];
-  categories: [CollectionType];
-  tags: [string];
-  sizes: [string];
-  colors: [string];
-  price: number;
-  discount: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 type ProductType = {
   _id: string;
   title: string;
   description: string;
   price: number;
   discount: number;
-  collections: [CollectionType];
+  image: [string];
   categories: [CategoriesType];
+  collections: [CollectionType];
+  subcollections: [CollectionType];
   tags: [string];
   color1: string;
   color2: string;

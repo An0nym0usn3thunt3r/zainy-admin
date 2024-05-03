@@ -34,7 +34,7 @@ const MultiText: React.FC<MultiTextProps> = ({
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
+          if (e.key === "Enter" || e.key === ",") {
             e.preventDefault();
             addValue(inputValue);
           }

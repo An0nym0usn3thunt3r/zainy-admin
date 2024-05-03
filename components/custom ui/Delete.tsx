@@ -21,7 +21,6 @@ interface DeleteProps {
 
 const Delete: React.FC<DeleteProps> = ({ item, id }) => {
   const [loading, setLoading] = useState(false);
-  console.log(`request to delete : ${item}`)
 
   const onDelete = async () => {
     try {
@@ -33,6 +32,9 @@ const Delete: React.FC<DeleteProps> = ({ item, id }) => {
           break;
         case "collection":
           itemType = "collections";
+          break;
+        case "sub_collection":
+          itemType = "sub_collections";
           break;
         case "categories":
           itemType = "categories";
@@ -50,8 +52,6 @@ const Delete: React.FC<DeleteProps> = ({ item, id }) => {
         method: "DELETE",
       });
 
-      console.log("delete product : ")
-      console.log(res)
       if (res.ok) {
         console.log("res okay")
         setLoading(false);

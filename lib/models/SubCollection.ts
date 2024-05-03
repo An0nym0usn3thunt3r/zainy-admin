@@ -9,6 +9,7 @@ const collectionSchema = new mongoose.Schema({
   description: String,
   image: [String],
   categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Categories" }],
+  collections: [{ type: mongoose.Schema.Types.ObjectId, ref: "Collection" }],
   createdAt: {
     type: Date,
     default: Date.now,
@@ -19,6 +20,6 @@ const collectionSchema = new mongoose.Schema({
   }
 })
 
-const   Collection =mongoose.models.Collection || mongoose.model("Collection", collectionSchema);
+const SubCollection = mongoose.models.SubCollection || mongoose.model("SubCollection", collectionSchema);
 
-export default Collection;
+export default SubCollection;

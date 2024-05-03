@@ -14,16 +14,19 @@ export const navLinks = [
     label: "Dashboard",
   },
   {
-    url: "/collections",
-    icon: <Shapes />,
-    label: "Categories",
-    // label: "Collections",
-  },
-  {
     url: "/categories",
     icon: <Shapes />,
+    label: "Categories",
+  },
+  {
+    url: "/collections",
+    icon: <Shapes />,
     label: "Collections",
-    // label: "Categories",
+  },
+  {
+    url: "/sub_collections",
+    icon: <Shapes />,
+    label: "Sub Collections",
   },
   {
     url: "/products",

@@ -19,16 +19,11 @@ export const columns: ColumnDef<CategoriesType>[] = [
     ),
   },
   {
-    accessorKey: "products",
-    header: "Products",
-    cell: ({ row }) => <p>{row.original.products.length}</p>,
-  },
-  {
     accessorKey: "image",
     header: "Image",
     cell: ({ row }) => (
       <Image
-        src={row.original.image}
+        src={row.original.image[0]}
         width={200}
         height={200}
         alt="image"
@@ -37,6 +32,7 @@ export const columns: ColumnDef<CategoriesType>[] = [
   },
   {
     id: "actions",
+    header: "Action",
     cell: ({ row }) => <Delete item="categories" id={row.original._id} />,
   },
 ];

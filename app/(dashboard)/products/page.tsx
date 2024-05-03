@@ -34,6 +34,11 @@ const Products = () => {
     getProducts();
   }, []);
 
+  useEffect(() => {
+    console.log("products")
+    console.log(products)
+  }, [products]);
+
   return loading ? (
     <Loader />
   ) : (

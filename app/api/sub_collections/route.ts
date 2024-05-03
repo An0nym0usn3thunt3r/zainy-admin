@@ -2,8 +2,9 @@ import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
-import Collection from "@/lib/models/Collection";
+import SubCollection from "@/lib/models/SubCollection";
 import Categories from "@/lib/models/Categories";
+import Collection from "@/lib/models/Collection";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -15,9 +16,9 @@ export const POST = async (req: NextRequest) => {
 
     await connectToDB()
 
-    const { title, description, categories, image } = await req.json()
+    const { title, description, categories, collections, image } = await req.json()
 
-    const existingCollection = await Collection.findOne({ title })
+    const existingCollection = await SubCollection.findOne({ title })
 
     if (existingCollection) {
       return new NextResponse("Collection already exists", { status: 400 })
@@ -27,10 +28,11 @@ export const POST = async (req: NextRequest) => {
       return new NextResponse("Title is required", { status: 400 })
     }
 
-    const newCollection = await Collection.create({
+    const newCollection = await SubCollection.create({
       title,
       description,
       categories,
+      collections,
       image,
     })
 
@@ -38,7 +40,7 @@ export const POST = async (req: NextRequest) => {
 
     return NextResponse.json(newCollection, { status: 200 })
   } catch (err) {
-    console.log("[collections_POST]", err)
+    console.log("[sub_collections_POST]", err)
     return new NextResponse("Internal Server Error", { status: 500 })
   }
 }
@@ -47,9 +49,10 @@ export const GET = async (req: NextRequest) => {
   try {
     await connectToDB()
 
-    const collections = await Collection.find().sort({ createdAt: "desc" })
+    const collections = await SubCollection.find().sort({ createdAt: "desc" })
     .populate([
       { path: "categories", model: Categories },
+      { path: "collections", model: Collection },
     ]);
 
     return NextResponse.json(collections, { status: 200 })

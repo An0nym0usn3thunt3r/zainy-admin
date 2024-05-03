@@ -1,5 +1,7 @@
 "use client";
 
+// home > ele > sub ele > product
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -37,11 +39,13 @@ import {
 
 const formSchema = z.object({
   title: z.string().min(2).max(100),
-  description: z.string().min(2).max(500).trim(),
+  description: z.string().max(500).trim(),
   price: z.coerce.number().min(0.1),
   discount: z.coerce.number().optional(),
-  collections: z.array(z.string()),
+  image: z.array(z.string()),
   categories: z.array(z.string()),
+  collections: z.array(z.string()),
+  subcollections: z.array(z.string()),
   tags: z.array(z.string()),
   color1: z.string(),
   color2: z.string(),
@@ -78,21 +82,48 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const router = useRouter();
 
   const [loading, setLoading] = useState(true);
-  const [collections, setCollections] = useState<CollectionType[]>([]);
   const [categories, setCategories] = useState<CategoriesType[]>([]);
+  const [collections, setCollections] = useState<CollectionType[]>([]);
+  const [subCollections, setSubCollections] = useState<SubCollectionType[]>([]);
+  const [categoriesNow, setCategoriesNow] = useState<string[]>([]);
+  const [collectionsNow, setCollectionsNow] = useState<string[]>([]);
+
+  const getSubCollections = async () => {
+    console.log("getSubCollections : ");
+    console.log(collectionsNow);
+    collectionsNow?.map(async (value, index) => {
+      try {
+        const res = await fetch(`/api/sub_collections/id/${value}`, {
+          method: "GET",
+        });
+        const data = await res.json();
+        console.log(data);
+        setSubCollections([...subCollections, data]);
+        setLoading(false);
+      } catch (err) {
+        console.log("[sub_collections_GET]", err);
+        toast.error("Something went wrong! Please try again.");
+      }
+    });
+  };
 
   const getCollections = async () => {
-    try {
-      const res = await fetch("/api/collections", {
-        method: "GET",
-      });
-      const data = await res.json();
-      setCollections(data);
-      setLoading(false);
-    } catch (err) {
-      console.log("[collections_GET]", err);
-      toast.error("Something went wrong! Please try again.");
-    }
+    console.log("getCollections : ");
+    console.log(collections);
+    console.log("RequestGetCollections");
+    categoriesNow?.map(async (value, index) => {
+      try {
+        const res = await fetch(`/api/collections/id/${value}`, {
+          method: "GET",
+        });
+        const data = await res.json();
+        setCollections([...collections, data]);
+        setLoading(false);
+      } catch (err) {
+        console.log("[sub_collections_GET]", err);
+        toast.error("Something went wrong! Please try again.");
+      }
+    });
   };
 
   const getCategories = async () => {
@@ -111,8 +142,21 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
   useEffect(() => {
     getCategories();
-    getCollections();
   }, []);
+
+  useEffect(() => {
+    setCollections([]);
+    if (collections.length == 0) {
+      getCollections();
+    }
+  }, [categoriesNow]);
+
+  useEffect(() => {
+    setSubCollections([]);
+    if (subCollections.length == 0) {
+      getSubCollections();
+    }
+  }, [collectionsNow]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -122,6 +166,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
           collections: initialData.collections.map(
             (collection) => collection._id
           ),
+          subcollections: initialData.subcollections.map(
+            (scollection) => scollection._id
+          ),
           categories: initialData.categories.map((category) => category._id),
         }
       : {
@@ -129,8 +176,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
           description: "",
           price: 0.1,
           discount: 0.1,
-          collections: [],
+          image: [],
           categories: [],
+          collections: [],
+          subcollections: [],
           tags: [],
           color1: "",
           color2: "",
@@ -170,6 +219,36 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
     }
   };
 
+  const handleAddCategoriesNow = (newCategory: string) => {
+    if (!categoriesNow.includes(newCategory)) {
+      setCategoriesNow([...categoriesNow, newCategory]);
+    } else {
+      console.log("Category already exists!");
+    }
+  };
+
+  const handleRemoveCategoryNow = (categoryToRemove: string) => {
+    const updatedCategories = categoriesNow.filter(
+      (category) => category !== categoryToRemove
+    );
+    setCategoriesNow(updatedCategories);
+  };
+
+  const handleAddCollectionsNow = (newCategory: string) => {
+    if (!collectionsNow.includes(newCategory)) {
+      setCollectionsNow([...collectionsNow, newCategory]);
+    } else {
+      console.log("collection already exists!");
+    }
+  };
+
+  const handleRemoveCollectionsNow = (categoryToRemove: string) => {
+    const updatedCategories = collectionsNow.filter(
+      (category) => category !== categoryToRemove
+    );
+    setCollectionsNow(updatedCategories);
+  };
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log("\n\n\nform:");
     console.log(values);
@@ -187,8 +266,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       if (res.ok) {
         setLoading(false);
         toast.success(`Product ${initialData ? "updated" : "created"}`);
-        // window.location.href = "/products";
-        // router.push("/products");
+        window.location.href = "/products";
+        router.push("/products");
       }
     } catch (err) {
       console.log("[products_POST]", err);
@@ -247,13 +326,34 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
             )}
           />
 
+          <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <ImageUpload
+                    value={field.value}
+                    onChange={(url) => field.onChange([...field.value, url])}
+                    onRemove={(url) =>
+                      field.onChange([
+                        ...field.value.filter((image) => image !== url),
+                      ])
+                    }
+                  />
+                </FormControl>
+                <FormMessage className="text-red-1" />
+              </FormItem>
+            )}
+          />
+
           <div className="md:grid md:grid-cols-2 gap-8 p-8">
             <FormField
               control={form.control}
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price ($)</FormLabel>
+                  <FormLabel>Price (AED)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -284,35 +384,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 </FormItem>
               )}
             />
-            {collections.length > 0 && (
-              <FormField
-                control={form.control}
-                name="collections"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Collections</FormLabel>
-                    <FormControl>
-                      <MultiSelect
-                        placeholder="Collections"
-                        collections={collections}
-                        value={field.value}
-                        onChange={(_id) =>
-                          field.onChange([...field.value, _id])
-                        }
-                        onRemove={(idToRemove) =>
-                          field.onChange([
-                            ...field.value.filter(
-                              (collectionId) => collectionId !== idToRemove
-                            ),
-                          ])
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage className="text-red-1" />
-                  </FormItem>
-                )}
-              />
-            )}
             {categories.length > 0 && (
               <FormField
                 control={form.control}
@@ -325,9 +396,71 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                         placeholder="Categories"
                         categories={categories}
                         value={field.value?.length > 0 ? field.value : null}
-                        onChange={(tag) =>
-                          field.onChange([...(field?.value || []), tag])
-                        }
+                        onChange={(tag) => {
+                          handleAddCategoriesNow(tag);
+                          field.onChange([...(field?.value || []), tag]);
+                        }}
+                        onRemove={(idToRemove) => {
+                          handleRemoveCategoryNow(idToRemove);
+                          field.onChange([
+                            ...field.value.filter(
+                              (collectionId) => collectionId !== idToRemove
+                            ),
+                          ]);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            )}
+            {collections.length > 0 && (
+              <FormField
+                control={form.control}
+                name="collections"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Collections</FormLabel>
+                    <FormControl>
+                      <MultiSelect
+                        placeholder="Collections"
+                        collections={collections}
+                        value={field.value}
+                        onChange={(tag) => {
+                          handleAddCollectionsNow(tag);
+                          field.onChange([...(field?.value || []), tag]);
+                        }}
+                        onRemove={(idToRemove) => {
+                          handleRemoveCollectionsNow(idToRemove);
+                          field.onChange([
+                            ...field.value.filter(
+                              (collectionId) => collectionId !== idToRemove
+                            ),
+                          ]);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            )}
+            {subCollections.length > 0 && (
+              <FormField
+                control={form.control}
+                name="subcollections"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Sub Collections</FormLabel>
+                    <FormControl>
+                      <MultiSelect
+                        placeholder="Sub Collections"
+                        collections={subCollections}
+                        value={field.value}
+                        onChange={(_id) => {
+                          field.onChange([...field.value, _id]);
+                        }}
                         onRemove={(idToRemove) =>
                           field.onChange([
                             ...field.value.filter(
@@ -377,8 +510,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 <TableHeader>
                   <TableColumn> </TableColumn>
                   <TableColumn>Color</TableColumn>
-                  <TableColumn>Difference in Price</TableColumn>
-                  <TableColumn>Total Price</TableColumn>
+                  <TableColumn>Price</TableColumn>
                   <TableColumn>Image</TableColumn>
                 </TableHeader>
                 <TableBody>
@@ -421,9 +553,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                           </FormItem>
                         )}
                       />
-                    </TableCell>
-                    <TableCell>
-                      {form?.getValues("cp1") + form?.getValues("price")}
                     </TableCell>
                     <TableCell>
                       <FormField
@@ -493,9 +622,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       />
                     </TableCell>
                     <TableCell>
-                      {form?.getValues("cp2") + form?.getValues("price")}
-                    </TableCell>
-                    <TableCell>
                       <FormField
                         control={form.control}
                         name="ci2"
@@ -561,9 +687,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                           </FormItem>
                         )}
                       />
-                    </TableCell>
-                    <TableCell>
-                      {form?.getValues("cp3") + form?.getValues("price")}
                     </TableCell>
                     <TableCell>
                       <FormField
@@ -633,9 +756,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       />
                     </TableCell>
                     <TableCell>
-                      {form?.getValues("cp4") + form?.getValues("price")}
-                    </TableCell>
-                    <TableCell>
                       <FormField
                         control={form.control}
                         name="ci4"
@@ -703,9 +823,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       />
                     </TableCell>
                     <TableCell>
-                      {form?.getValues("cp5") + form?.getValues("price")}
-                    </TableCell>
-                    <TableCell>
                       <FormField
                         control={form.control}
                         name="ci5"
@@ -744,8 +861,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 <TableHeader>
                   <TableColumn> </TableColumn>
                   <TableColumn>Size</TableColumn>
-                  <TableColumn>Difference in Price</TableColumn>
-                  <TableColumn>Total Price</TableColumn>
+                  <TableColumn>Price</TableColumn>
                 </TableHeader>
                 <TableBody>
                   <TableRow key="1">
@@ -788,9 +904,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                         )}
                       />
                     </TableCell>
-                    <TableCell>
-                      {form?.getValues("sp1") + form?.getValues("price")}
-                    </TableCell>
                   </TableRow>
                   <TableRow key="2">
                     <TableCell>2.</TableCell>
@@ -831,9 +944,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                           </FormItem>
                         )}
                       />
-                    </TableCell>
-                    <TableCell>
-                      {form?.getValues("sp2") + form?.getValues("price")}
                     </TableCell>
                   </TableRow>
                   <TableRow key="3">
@@ -876,9 +986,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                         )}
                       />
                     </TableCell>
-                    <TableCell>
-                      {form?.getValues("sp3") + form?.getValues("price")}
-                    </TableCell>
                   </TableRow>
                   <TableRow key="4">
                     <TableCell>4.</TableCell>
@@ -920,9 +1027,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                         )}
                       />
                     </TableCell>
-                    <TableCell>
-                      {form?.getValues("sp4") + form?.getValues("price")}
-                    </TableCell>
                   </TableRow>
                   <TableRow key="5">
                     <TableCell>5.</TableCell>
@@ -963,9 +1067,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                           </FormItem>
                         )}
                       />
-                    </TableCell>
-                    <TableCell>
-                      {form?.getValues("sp5") + form?.getValues("price")}
                     </TableCell>
                   </TableRow>
                 </TableBody>

@@ -7,16 +7,7 @@ const CategoriesSchema = new mongoose.Schema({
     unique: true,
   },
   description: String,
-  image: {
-    type: String,
-    required: true,
-  },
-  products: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-    }
-  ],
+  image: [String],
   createdAt: {
     type: Date,
     default: Date.now,

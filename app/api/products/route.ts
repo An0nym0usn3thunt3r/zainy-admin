@@ -5,6 +5,7 @@ import { connectToDB } from "@/lib/mongoDB";
 import Product from "@/lib/models/Product";
 import Collection from "@/lib/models/Collection";
 import Categories from "@/lib/models/Categories";
+import SubCollection from "@/lib/models/SubCollection";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -21,8 +22,10 @@ export const POST = async (req: NextRequest) => {
       description,
       price,
       discount,
+      image,
       collections,
       categories,
+      subcollections,
       tags,
       color1,
       color2,
@@ -52,14 +55,14 @@ export const POST = async (req: NextRequest) => {
     } = await req.json();
 
     if (
-      !title ||
-      !description ||
-      !categories ||
-      !price ||
-      !color1 ||
-      !cp1 ||
-      !ci1 ||
-      !discount
+      !title
+      // !description ||
+      // !categories ||
+      // !price ||
+      // !color1 ||
+      // !cp1 ||
+      // !ci1 ||
+      // !discount
     ) {
       return new NextResponse("Not enough data to create a product", {
         status: 400,
@@ -71,8 +74,10 @@ export const POST = async (req: NextRequest) => {
       description,
       price,
       discount,
-      collections,
+      image,
       categories,
+      collections,
+      subcollections,
       tags,
       color1,
       color2,
@@ -103,26 +108,6 @@ export const POST = async (req: NextRequest) => {
 
     await newProduct.save();
 
-    if (collections) {
-      for (const collectionId of collections) {
-        const collection = await Collection.findById(collectionId);
-        if (collection) {
-          collection.products.push(newProduct._id);
-          await collection.save();
-        }
-      }
-    }
-
-    // if (categories) {
-    //   for (const categoriesId of categories) {
-    //     const category = await Categories.findById(categoriesId);
-    //     if (category) {
-    //       category.products.push(newProduct._id);
-    //       await category.save();
-    //     }
-    //   }
-    // }
-
     return NextResponse.json(newProduct, { status: 200 });
   } catch (err) {
     console.log("[products_POST]", err);
@@ -137,8 +122,9 @@ export const GET = async (req: NextRequest) => {
     const products = await Product.find()
       .sort({ createdAt: "desc" })
       .populate([
-        { path: "collections", model: Collection },
         { path: "categories", model: Categories },
+        { path: "collections", model: Collection },
+        { path: "subcollections", model: SubCollection },
       ]);
 
     return NextResponse.json(products, { status: 200 });

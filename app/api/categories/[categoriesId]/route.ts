@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs";
 
 import { connectToDB } from "@/lib/mongoDB";
-import Product from "@/lib/models/Product";
 import Categories from "@/lib/models/Categories";
 
 export const GET = async (
@@ -12,7 +11,7 @@ export const GET = async (
   try {
     await connectToDB();
 
-    const CategoriesModal = await Categories.findById(params.categoriesId).populate({ path: "products", model: Product });
+    const CategoriesModal = await Categories.findById(params.categoriesId);
 
     if (!CategoriesModal) {
       return new NextResponse(
@@ -49,8 +48,8 @@ export const POST = async (
 
     const { title, description, image } = await req.json();
 
-    if (!title || !image) {
-      return new NextResponse("Title and image are required", { status: 400 });
+    if (!title) {
+      return new NextResponse("Title is required", { status: 400 });
     }
 
     CategoriesModal = await Categories.findByIdAndUpdate(
@@ -61,7 +60,7 @@ export const POST = async (
 
     await CategoriesModal.save();
 
-    return NextResponse.json(Categories, { status: 200 });
+    return NextResponse.json(CategoriesModal, { status: 200 });
   } catch (err) {
     console.log("[categoriesId_POST]", err);
     return new NextResponse("Internal error", { status: 500 });
@@ -82,11 +81,6 @@ export const DELETE = async (
     await connectToDB();
 
     await Categories.findByIdAndDelete(params.categoriesId);
-
-    await Product.updateMany(
-      { Categoriess: params.categoriesId },
-      { $pull: { Categoriess: params.categoriesId } }
-    );
     
     return new NextResponse("Categories is deleted", { status: 200 });
   } catch (err) {

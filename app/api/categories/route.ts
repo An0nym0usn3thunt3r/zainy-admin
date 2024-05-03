@@ -14,15 +14,21 @@ export const POST = async (req: NextRequest) => {
 
     await connectToDB()
 
+    console.log("/n/n/n New request")
+
     const { title, description, image } = await req.json()
+    console.log(title)
+    console.log(description)
+    console.log(image)
     const existingCategories = await Categories.findOne({ title })
 
     if (existingCategories) {
       return new NextResponse("Categories already exists", { status: 400 })
     }
 
-    if (!title || !image) {
-      return new NextResponse("Title and image are required", { status: 400 })
+    // if (!title || !image) {
+    if (!title) {
+      return new NextResponse("Title is required", { status: 400 })
     }
 
     const newCategories = await Categories.create({

@@ -24,12 +24,12 @@ import Delete from "../custom ui/Delete";
 
 const formSchema = z.object({
   title: z.string().min(2).max(100),
-  description: z.string().min(2).max(500).trim(),
-  image: z.string(),
+  description: z.string().max(500).trim(),
+  image: z.array(z.string()),
 });
 
 interface CategoriesFormProps {
-  initialData?: CategoriesType | null; //Must have "?" to make it optional
+  initialData?: CategoriesType | null;
 }
 
 const CategoriesForm: React.FC<CategoriesFormProps> = ({ initialData }) => {
@@ -44,16 +44,20 @@ const CategoriesForm: React.FC<CategoriesFormProps> = ({ initialData }) => {
       : {
           title: "",
           description: "",
-          image: "",
+          image: [],
         },
   });
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement> | React.KeyboardEvent<HTMLTextAreaElement>) => {
+  const handleKeyPress = (
+    e:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLTextAreaElement>
+  ) => {
     if (e.key === "Enter") {
       e.preventDefault();
     }
-  }
-  
+  };
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
@@ -80,17 +84,11 @@ const CategoriesForm: React.FC<CategoriesFormProps> = ({ initialData }) => {
     <div className="p-10">
       {initialData ? (
         <div className="flex items-center justify-between">
-          <p className="text-heading2-bold">
-            Edit Collection
-            {/* Edit Categorie */}
-            </p>
+          <p className="text-heading2-bold">Edit Categorie</p>
           <Delete id={initialData._id} item="categorie" />
         </div>
       ) : (
-        <p className="text-heading2-bold">
-          Create Collection
-          {/* Create Categorie */}
-          </p>
+        <p className="text-heading2-bold">Create Categorie</p>
       )}
       <Separator className="bg-grey-1 mt-4 mb-7" />
       <Form {...form}>
@@ -102,7 +100,11 @@ const CategoriesForm: React.FC<CategoriesFormProps> = ({ initialData }) => {
               <FormItem>
                 <FormLabel>Title</FormLabel>
                 <FormControl>
-                  <Input placeholder="Title" {...field} onKeyDown={handleKeyPress} />
+                  <Input
+                    placeholder="Title"
+                    {...field}
+                    onKeyDown={handleKeyPress}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -115,7 +117,12 @@ const CategoriesForm: React.FC<CategoriesFormProps> = ({ initialData }) => {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Description" {...field} rows={5} onKeyDown={handleKeyPress} />
+                  <Textarea
+                    placeholder="Description"
+                    {...field}
+                    rows={5}
+                    onKeyDown={handleKeyPress}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -126,15 +133,18 @@ const CategoriesForm: React.FC<CategoriesFormProps> = ({ initialData }) => {
             name="image"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Image</FormLabel>
                 <FormControl>
                   <ImageUpload
-                    value={field.value ? [field.value] : []}
-                    onChange={(url) => field.onChange(url)}
-                    onRemove={() => field.onChange("")}
+                    value={field.value}
+                    onChange={(url) => field.onChange([...field.value, url])}
+                    onRemove={(url) =>
+                      field.onChange([
+                        ...field.value.filter((image) => image !== url),
+                      ])
+                    }
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-1" />
               </FormItem>
             )}
           />

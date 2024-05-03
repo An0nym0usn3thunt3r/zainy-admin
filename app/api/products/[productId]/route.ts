@@ -1,5 +1,7 @@
+import Categories from "@/lib/models/Categories";
 import Collection from "@/lib/models/Collection";
 import Product from "@/lib/models/Product";
+import SubCollection from "@/lib/models/SubCollection";
 import { connectToDB } from "@/lib/mongoDB";
 import { auth } from "@clerk/nextjs";
 
@@ -12,10 +14,11 @@ export const GET = async (
   try {
     await connectToDB();
 
-    const product = await Product.findById(params.productId).populate({
-      path: "collections",
-      model: Collection,
-    });
+    const product = await Product.findById(params.productId).populate([
+      { path: "categories", model: Categories },
+      { path: "collections", model: Collection },
+      { path: "subcollections", model: SubCollection },
+    ]);
 
     if (!product) {
       return new NextResponse(

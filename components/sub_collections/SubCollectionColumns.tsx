@@ -5,7 +5,7 @@ import Delete from "../custom ui/Delete";
 import Link from "next/link";
 import Image from "next/image";
 
-export const columns: ColumnDef<CollectionType>[] = [
+export const columns: ColumnDef<SubCollectionType>[] = [
   {
     accessorKey: "title",
     header: "Title",
@@ -20,9 +20,13 @@ export const columns: ColumnDef<CollectionType>[] = [
   },
   {
     accessorKey: "categories",
-    header: "Categories",
-    cell: ({ row }) =>
-      <Link href={`/categories/${row.original.categories.map((category) => category._id)}`}>{row.original.categories.map((category) => category.title).join(", ")}</Link>
+    header: "categories",
+    cell: ({ row }) => row.original.categories.length > 0 ? row.original.categories.map((category) => category.title).join(", ") : "-",
+  },
+  {
+    accessorKey: "collections",
+    header: "Collections",
+    cell: ({ row }) => row.original.collections.length > 0 ? row.original.collections.map((collection) => collection.title).join(", ") : "-",
   },
   {
     accessorKey: "image",
@@ -39,6 +43,6 @@ export const columns: ColumnDef<CollectionType>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => <Delete item="collection" id={row.original._id} />,
+    cell: ({ row }) => <Delete item="sub_collection" id={row.original._id} />,
   },
 ];
