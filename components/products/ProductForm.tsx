@@ -1068,6 +1068,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <FormField
                         control={form.control}
                         name="color6"
+                        rules={{required:false}}
                         render={({ field }) => (
                           <FormItem>
                             <FormControl>
