@@ -27,15 +27,7 @@ import MultiText from "../custom ui/MultiText";
 import MultiSelect from "../custom ui/MultiSelect";
 import MultiSelectCat from "../custom ui/MultiSelectCat";
 import Loader from "../custom ui/Loader";
-import { Accordion, AccordionItem } from "@nextui-org/react";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableColumn,
-  TableRow,
-  TableCell,
-} from "@nextui-org/react";
+
 
 const formSchema = z.object({
   title: z.string().min(2).max(100),
@@ -88,6 +80,27 @@ const formSchema = z.object({
   cp18: z.coerce.number().optional(),
   cp19: z.coerce.number().optional(),
   cp20: z.coerce.number().optional(),
+
+  dp1: z.coerce.number().optional(),
+  dp2: z.coerce.number().optional(),
+  dp3: z.coerce.number().optional(),
+  dp4: z.coerce.number().optional(),
+  dp5: z.coerce.number().optional(),
+  dp6: z.coerce.number().optional(),
+  dp7: z.coerce.number().optional(),
+  dp8: z.coerce.number().optional(),
+  dp9: z.coerce.number().optional(),
+  dp10: z.coerce.number().optional(),
+  dp11: z.coerce.number().optional(),
+  dp12: z.coerce.number().optional(),
+  dp13: z.coerce.number().optional(),
+  dp14: z.coerce.number().optional(),
+  dp15: z.coerce.number().optional(),
+  dp16: z.coerce.number().optional(),
+  dp17: z.coerce.number().optional(),
+  dp18: z.coerce.number().optional(),
+  dp19: z.coerce.number().optional(),
+  dp20: z.coerce.number().optional(),
 
   ci1: z.array(z.string()),
   ci2: z.array(z.string()),
@@ -147,15 +160,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   const [collectionsNow, setCollectionsNow] = useState<string[]>([]);
 
   const getSubCollections = async () => {
-    console.log("getSubCollections : ");
-    console.log(collectionsNow);
     collectionsNow?.map(async (value, index) => {
       try {
         const res = await fetch(`/api/sub_collections/id/${value}`, {
           method: "GET",
         });
         const data = await res.json();
-        console.log(data);
         setSubCollections([...subCollections, data]);
         setLoading(false);
       } catch (err) {
@@ -166,9 +176,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   };
 
   const getCollections = async () => {
-    console.log("getCollections : ");
-    console.log(collections);
-    console.log("RequestGetCollections");
     categoriesNow?.map(async (value, index) => {
       try {
         const res = await fetch(`/api/collections/id/${value}`, {
@@ -281,6 +288,27 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
           cp19: 0,
           cp20: 0,
 
+          dp1: 0,
+          dp2: 0,
+          dp3: 0,
+          dp4: 0,
+          dp5: 0,
+          dp6: 0,
+          dp7: 0,
+          dp8: 0,
+          dp9: 0,
+          dp10: 0,
+          dp11: 0,
+          dp12: 0,
+          dp13: 0,
+          dp14: 0,
+          dp15: 0,
+          dp16: 0,
+          dp17: 0,
+          dp18: 0,
+          dp19: 0,
+          dp20: 0,
+
           ci1: [],
           ci2: [],
           ci3: [],
@@ -330,10 +358,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       | React.KeyboardEvent<HTMLInputElement>
       | React.KeyboardEvent<HTMLTextAreaElement>
   ) => {
-    console.log("key event : " + e.key);
-    // if (e.key === "Enter") {
-    //   e.preventDefault();
-    // }
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
   };
 
   const handleAddCategoriesNow = (newCategory: string) => {
@@ -367,12 +394,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
   };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log("\n\n\nform:");
-    console.log(values);
     try {
       setLoading(true);
-      console.log("\n\n\n initialData : ");
-      console.log(initialData);
       const url = initialData
         ? `/api/products/${initialData._id}`
         : "/api/products";
@@ -617,7 +640,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
             )}
           />
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-5 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-6 sm:grid-cols-3">
             <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
               No.
             </div>
@@ -629,6 +652,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
             </div>
             <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
               Price
+            </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              Discount
             </div>
             <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
               Image
@@ -685,6 +711,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <Input
                         type="number"
                         placeholder="Price 1"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp1"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 1"
                         {...field}
                         onKeyDown={handleKeyPress}
                       />
@@ -779,6 +824,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp2"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 2"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="w-40 border border-gray-300 rounded">
               <FormField
                 control={form.control}
@@ -855,6 +919,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <Input
                         type="number"
                         placeholder="Price 3"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp3"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 3"
                         {...field}
                         onKeyDown={handleKeyPress}
                       />
@@ -949,6 +1032,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp4"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 4"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="w-40 border border-gray-300 rounded">
               <FormField
                 control={form.control}
@@ -1025,6 +1127,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <Input
                         type="number"
                         placeholder="Price 5"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp5"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 5"
                         {...field}
                         onKeyDown={handleKeyPress}
                       />
@@ -1119,6 +1240,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp6"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 6"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="w-40 border border-gray-300 rounded">
               <FormField
                 control={form.control}
@@ -1195,6 +1335,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <Input
                         type="number"
                         placeholder="Price 7"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp7"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 7"
                         {...field}
                         onKeyDown={handleKeyPress}
                       />
@@ -1289,6 +1448,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp8"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 8"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="w-40 border border-gray-300 rounded">
               <FormField
                 control={form.control}
@@ -1365,6 +1543,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <Input
                         type="number"
                         placeholder="Price 9"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp9"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 9"
                         {...field}
                         onKeyDown={handleKeyPress}
                       />
@@ -1459,6 +1656,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp10"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 10"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="w-40 border border-gray-300 rounded">
               <FormField
                 control={form.control}
@@ -1535,6 +1751,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <Input
                         type="number"
                         placeholder="Price 11"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp11"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 11"
                         {...field}
                         onKeyDown={handleKeyPress}
                       />
@@ -1629,6 +1864,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp12"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 12"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="w-40 border border-gray-300 rounded">
               <FormField
                 control={form.control}
@@ -1705,6 +1959,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <Input
                         type="number"
                         placeholder="Price 13"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp13"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 13"
                         {...field}
                         onKeyDown={handleKeyPress}
                       />
@@ -1799,6 +2072,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp14"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 14"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="w-40 border border-gray-300 rounded">
               <FormField
                 control={form.control}
@@ -1875,6 +2167,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <Input
                         type="number"
                         placeholder="Price 15"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp15"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 15"
                         {...field}
                         onKeyDown={handleKeyPress}
                       />
@@ -1969,6 +2280,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp16"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 16"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="w-40 border border-gray-300 rounded">
               <FormField
                 control={form.control}
@@ -2045,6 +2375,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <Input
                         type="number"
                         placeholder="Price 17"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp17"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 17"
                         {...field}
                         onKeyDown={handleKeyPress}
                       />
@@ -2139,6 +2488,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp18"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 18"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="w-40 border border-gray-300 rounded">
               <FormField
                 control={form.control}
@@ -2224,6 +2592,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 )}
               />
             </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp19"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 19"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="w-40 border border-gray-300 rounded">
               <FormField
                 control={form.control}
@@ -2300,6 +2687,25 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                       <Input
                         type="number"
                         placeholder="Price 20"
+                        {...field}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="w-40 flex h-10 justify-center items-center border border-gray-300 rounded">
+              <FormField
+                control={form.control}
+                name="dp20"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Discount 20"
                         {...field}
                         onKeyDown={handleKeyPress}
                       />
