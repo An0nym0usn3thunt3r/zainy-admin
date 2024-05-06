@@ -40,7 +40,10 @@ type ProductType = {
   image: [string];
   categories: [CategoriesType];
   collections: [CollectionType];
-  subcollections: [CollectionType];
+  subcollections: [CollectionType];  
+  youtube: string;
+  rattings: number;
+  reviews: string;
   tags: [string];
   color1: string;
   color2: string;

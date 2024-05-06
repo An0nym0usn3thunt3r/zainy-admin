@@ -27,6 +27,9 @@ export const POST = async (req: NextRequest) => {
       categories,
       subcollections,
       tags,
+      youtube,
+      rattings,
+      reviews,
 
       color1,
       color2,
@@ -150,6 +153,9 @@ export const POST = async (req: NextRequest) => {
       categories,
       subcollections,
       tags,
+      youtube,
+      rattings,
+      reviews,
 
       color1,
       color2,

@@ -26,7 +26,6 @@ import MultiSelect from "../custom ui/MultiSelect";
 import MultiSelectCat from "../custom ui/MultiSelectCat";
 import Loader from "../custom ui/Loader";
 
-
 const formSchema = z.object({
   title: z.string().min(2).max(100),
   description: z.string().max(500).trim().optional(),
@@ -37,7 +36,10 @@ const formSchema = z.object({
   collections: z.array(z.string()),
   subcollections: z.array(z.string()),
   tags: z.array(z.string()),
-  
+  youtube: z.string().optional(),
+  rattings: z.coerce.number().optional(),
+  reviews: z.string().optional(),
+
   color1: z.string().optional(),
   color2: z.string().optional(),
   color3: z.string().optional(),
@@ -245,6 +247,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
           collections: [],
           subcollections: [],
           tags: [],
+          youtube: "",
+          rattings: 0,
+          reviews: "",
+
           color1: "",
           color2: "",
           color3: "",
@@ -523,6 +529,65 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="rattings"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rattings</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Rattings"
+                      {...field}
+                      onKeyDown={handleKeyPress}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-1" />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="youtube"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Youtube</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Youtube"
+                      {...field}
+                      onKeyDown={handleKeyPress}
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-1" />
+                </FormItem>
+              )}
+            />
+
+            <div className="col-span-2">
+              <FormField
+                control={form.control}
+                name="reviews"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Reviews</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Reviews"
+                        {...field}
+                        rows={5}
+                        onKeyDown={handleKeyPress}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-1" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             {categories.length > 0 && (
               <FormField
                 control={form.control}
