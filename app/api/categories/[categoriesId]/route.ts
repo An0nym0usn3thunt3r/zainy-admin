@@ -11,7 +11,7 @@ export const GET = async (
   try {
     await connectToDB();
 
-    const CategoriesModal = await Categories.findById(params.categoriesId);
+    const CategoriesModal = await Categories.findById(params.categoriesId).populate({ path: "products", model: Product });
 
     if (!CategoriesModal) {
       return new NextResponse(
