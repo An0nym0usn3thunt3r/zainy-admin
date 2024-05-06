@@ -3,7 +3,6 @@ import { auth } from "@clerk/nextjs";
 
 import { connectToDB } from "@/lib/mongoDB";
 import Categories from "@/lib/models/Categories";
-import Product from "@/lib/models/Product";
 
 export const GET = async (
   req: NextRequest,
@@ -12,7 +11,7 @@ export const GET = async (
   try {
     await connectToDB();
 
-    const CategoriesModal = await Categories.findById(params.categoriesId).populate({ path: "products", model: Product});
+    const CategoriesModal = await Categories.findById(params.categoriesId)
 
     if (!CategoriesModal) {
       return new NextResponse(
