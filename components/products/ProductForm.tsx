@@ -1,7 +1,5 @@
 "use client";
 
-// home > ele > sub ele > product
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -39,6 +37,7 @@ const formSchema = z.object({
   collections: z.array(z.string()),
   subcollections: z.array(z.string()),
   tags: z.array(z.string()),
+  
   color1: z.string().optional(),
   color2: z.string().optional(),
   color3: z.string().optional(),
