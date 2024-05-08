@@ -256,8 +256,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
       : {
           title: "",
           description: "",
-          price: 0.1,
-          discount: 0.1,
+          price: 0,
+          discount: 0,
           image: [],
           categories: [],
           collections: [],
