@@ -27,9 +27,9 @@ import MultiSelectCat from "../custom ui/MultiSelectCat";
 import Loader from "../custom ui/Loader";
 
 const formSchema = z.object({
-  title: z.string().min(2).max(100),
-  description: z.string().max(500).trim().optional(),
-  price: z.coerce.number().min(0.1),
+  title: z.string().min(2),
+  description: z.string().trim().optional(),
+  price: z.coerce.number().optional(),
   discount: z.coerce.number().optional(),
   image: z.array(z.string()),
   categories: z.array(z.string()),
@@ -208,6 +208,22 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
   useEffect(() => {
     getCategories();
+
+    if(initialData){
+      let categoriesNowArr:any = [];
+      initialData.categories.map((category) => {
+        categoriesNowArr.push(category._id)
+      })
+
+      setCategoriesNow(categoriesNowArr)
+
+      let collectionsNowArr:any = [];
+      initialData.collections.map((collection) => {
+        collectionsNowArr.push(collection._id)
+      })
+
+      setCollectionsNow(collectionsNowArr)
+    }
   }, []);
 
   useEffect(() => {

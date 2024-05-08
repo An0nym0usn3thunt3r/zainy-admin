@@ -80,6 +80,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
 
   useEffect(() => {
     getCategories();
+
+    if(initialData){
+      let categoriesNowArr:any = [];
+      initialData.categories?.map((category) => {
+        categoriesNowArr.push(category._id)
+      })
+      setCategoriesNow(categoriesNowArr)
+    }
   }, []);
 
   useEffect(() => {
@@ -189,7 +197,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialData }) => {
           />
 
           <div className="md:grid md:grid-cols-2 gap-8">
-            {categories.length > 0 && (
+          {categories.length > 0 && (
               <FormField
                 control={form.control}
                 name="categories"

@@ -2,22 +2,22 @@
 
 import { useEffect, useState, useCallback } from "react"
 import Loader from "@/components/custom ui/Loader"
-import CollectionForm from "@/components/collections/CollectionForm"
+import SubCollectionForm from "@/components/sub_collections/SubCollectionForm"
 
 const CollectionDetails = ({ params }: { params: { collectionId: string }}) => {
   const [loading, setLoading] = useState(true)
-  const [collectionDetails, setCollectionDetails] = useState<CollectionType | null>(null)
+  const [collectionDetails, setCollectionDetails] = useState<SubCollectionType | null>(null)
 
   const getCollectionDetails = useCallback(async () => {
     try { 
-      const res = await fetch(`/api/collections/${params.collectionId}`, {
+      const res = await fetch(`/api/sub_collections/${params.collectionId}`, {
         method: "GET"
       })
       const data = await res.json()
       setCollectionDetails(data)
       setLoading(false)
     } catch (err) {
-      console.log("[collectionId_GET]", err)
+      console.log("[sub_collectionId_GET]", err)
     }
   }, [params.collectionId])
 
@@ -29,7 +29,7 @@ const CollectionDetails = ({ params }: { params: { collectionId: string }}) => {
   }, [getCollectionDetails])
 
   return loading ? <Loader /> : (
-    <CollectionForm initialData={collectionDetails}/>
+    <SubCollectionForm initialData={collectionDetails}/>
   )
 }
 

@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs";
 import { connectToDB } from "@/lib/mongoDB";
 import Collection from "@/lib/models/Collection";
 import Product from "@/lib/models/Product";
+import Categories from "@/lib/models/Categories";
 
 export const GET = async (
   req: NextRequest,
@@ -12,7 +13,9 @@ export const GET = async (
   try {
     await connectToDB();
 
-    const collection = await Collection.findById(params.collectionId);
+    const collection = await Collection.findById(params.collectionId).populate([
+      { path: "categories", model: Categories },
+    ]);
 
     if (!collection) {
       return new NextResponse(
@@ -41,7 +44,9 @@ export const POST = async (
 
     await connectToDB();
 
-    let collection = await Collection.findById(params.collectionId);
+    let collection = await Collection.findById(params.collectionId).populate([
+      { path: "categories", model: Categories },
+    ]);
 
     if (!collection) {
       return new NextResponse("Collection not found", { status: 404 });

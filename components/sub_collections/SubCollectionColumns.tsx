@@ -11,7 +11,7 @@ export const columns: ColumnDef<SubCollectionType>[] = [
     header: "Title",
     cell: ({ row }) => (
       <Link
-        href={`/collections/${row.original._id}`}
+        href={`/sub_collections/${row.original._id}`}
         className="hover:text-red-1"
       >
         {row.original.title}

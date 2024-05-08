@@ -5,6 +5,7 @@ import { connectToDB } from "@/lib/mongoDB";
 import Collection from "@/lib/models/Collection";
 import Product from "@/lib/models/Product";
 import SubCollection from "@/lib/models/SubCollection";
+import Categories from "@/lib/models/Categories";
 
 export const GET = async (
   req: NextRequest,
@@ -13,7 +14,10 @@ export const GET = async (
   try {
     await connectToDB();
 
-    const collection = await SubCollection.findById(params.collectionId);
+    const collection = await SubCollection.findById(params.collectionId).populate([
+      { path: "categories", model: Categories },
+      { path: "collections", model: Collection },
+    ]);
 
     if (!collection) {
       return new NextResponse(

@@ -24,8 +24,8 @@ import Delete from "../custom ui/Delete";
 import MultiSelectCat from "../custom ui/MultiSelectCat";
 
 const formSchema = z.object({
-  title: z.string().min(2).max(100),
-  description: z.string().max(500).trim(),
+  title: z.string().min(2),
+  description: z.string().trim(),
   image: z.array(z.string()),
   categories: z.array(z.string()),
 });
@@ -63,7 +63,7 @@ const CollectionForm: React.FC<CollectionFormProps> = ({ initialData }) => {
     defaultValues: initialData
       ? {
           ...initialData,
-          categories: initialData.categories.map((category) => category.title),
+          categories: initialData.categories.map((category) => category._id),
         }
       : {
           title: "",
